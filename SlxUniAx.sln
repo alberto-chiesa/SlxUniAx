@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniLib", "UniLib\UniLib.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlxUniAx", "SlxUniAx\SlxUniAx.csproj", "{6E0E165C-7C60-4709-B92A-62EF641AF78F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlxUniAxTest", "SlxUniAxTest\SlxUniAxTest.csproj", "{9A046478-9F0A-4A80-9564-3F910B21CBF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{6E0E165C-7C60-4709-B92A-62EF641AF78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E0E165C-7C60-4709-B92A-62EF641AF78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E0E165C-7C60-4709-B92A-62EF641AF78F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A046478-9F0A-4A80-9564-3F910B21CBF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A046478-9F0A-4A80-9564-3F910B21CBF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A046478-9F0A-4A80-9564-3F910B21CBF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A046478-9F0A-4A80-9564-3F910B21CBF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

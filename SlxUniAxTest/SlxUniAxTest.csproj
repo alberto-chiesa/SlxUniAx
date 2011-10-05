@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E69AB050-1A12-43A9-9621-8E5ACACBBBF7}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{9A046478-9F0A-4A80-9564-3F910B21CBF0}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gianos.UniLib</RootNamespace>
-    <AssemblyName>Gianos.UniLib</AssemblyName>
+    <RootNamespace>Gianos.SlxUniAxTest</RootNamespace>
+    <AssemblyName>SlxUniAxTest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -45,10 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbHandler.cs" />
-    <Compile Include="FieldInformation.cs" />
-    <Compile Include="FieldInformationCollection.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniLib\UniLib.csproj">
+      <Project>{E69AB050-1A12-43A9-9621-8E5ACACBBBF7}</Project>
+      <Name>UniLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

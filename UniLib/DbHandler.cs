@@ -9,6 +9,7 @@ namespace Gianos.UniLib
     {
         public string dbConnectionString { get; set; }
         private System.Data.SqlClient.SqlConnection dbConnection;
+        
 
         public DbHandler(string _dbConnectionString)
         {
@@ -28,8 +29,17 @@ namespace Gianos.UniLib
 
         private void OpenDbConnection(string _dbConnectionString)
         {
-            this.dbConnectionString = _dbConnectionString;
-            this.dbConnection = new System.Data.SqlClient.SqlConnection(this.dbConnectionString);
+            dbConnectionString = _dbConnectionString;
+            dbConnection = new System.Data.SqlClient.SqlConnection(this.dbConnectionString);
+
+            try
+            {
+                dbConnection.Open();
+            }
+            catch (System.Data.SqlClient.SqlException e)
+            {
+                throw new System.Exception("There was an error initializing database connection:\r\n" + e.Message, e);
+            }
         }
         
         
