@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Gianos.UniLib
 {
+    /// <summary>
+    /// Class containing Informations about every field in the DB
+    /// </summary>
     public class FieldInformationCollection
     {
         private Dictionary<string, Dictionary<string, FieldInformation>> tables;
@@ -12,6 +15,29 @@ namespace Gianos.UniLib
         public FieldInformationCollection()
         {
             this.tables = new Dictionary<string,Dictionary<string,FieldInformation>>();
+        }
+
+        /// <summary>
+        /// Get field information about a table
+        /// </summary>
+        /// <param name="tableName">The name of the table</param>
+        /// <returns></returns>
+        public Dictionary<string, FieldInformation> this[string tableName]
+        {
+            get
+            {
+                if (String.IsNullOrEmpty(tableName))
+                    throw new ArgumentNullException("Table Name cannot be null or empty");
+
+                tableName = tableName.ToUpper();
+
+                if (!tables.ContainsKey(tableName))
+                    throw new System.Collections.Generic.KeyNotFoundException(
+                        String.Format("Table {0} not found.", tableName)
+                    );
+
+                return tables[tableName];
+            }
         }
 
         /// <summary>

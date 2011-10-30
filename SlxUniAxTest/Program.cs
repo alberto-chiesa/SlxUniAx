@@ -10,8 +10,8 @@ namespace Gianos.SlxUniAxTest
     {
         static void Main(string[] args)
         {
-            var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sa", "masterkey");
-
+            //var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sa", "masterkey");
+            var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sysdba", "masterkey");
 
         }
     }
