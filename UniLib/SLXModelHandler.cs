@@ -31,6 +31,15 @@ namespace Gianos.UniLib
             this.modelDir = new System.IO.DirectoryInfo(modelPath);
             if (!modelDir.Exists)
                 throw new Exception(String.Format("The model path {0} was not found!", modelPath));
+
+            try
+            {
+                var entityModelFolder = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
+            }
+            catch (Exception e)
+            {
+                throw new Exception("The Entity Model folder was not found inside the provided model folder!", e);
+            }
         }
 
         public FieldInformationCollection FindEntityModels()
