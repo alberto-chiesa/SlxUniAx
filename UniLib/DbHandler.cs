@@ -160,31 +160,66 @@ ORDER BY 1, 2;
             string createScript = GetCreateScriptForIndexes(field.tableName, field.fieldName),
                 dropScript = GetDropScriptForIndexes(field.tableName, field.fieldName);
 
-            OpenDbConnection();
-
-            // Drop the indexes on the field
-            SqlCommand cmd = dbConnection.CreateCommand();
-            cmd.CommandText = dropScript;
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandTimeout = 3600;
-            cmd.ExecuteNonQuery();
-
-            // Actually alter the column type (using SMO)
             Server serv = new Server(_serverConnection);
             Database dbase = serv.Databases[_databaseName];
             Table table = dbase.Tables[field.tableName, "sysdba"];
             Column col = table.Columns[field.fieldName];
+            SqlDataType newType = SqlDataType.NVarChar;
+            if (UnicodeEnabled)
+            {
+                if (col.DataType.SqlDataType == SqlDataType.VarChar)
+                    newType = SqlDataType.NVarChar;
+                else if (col.DataType.SqlDataType == SqlDataType.Char)
+                    newType = SqlDataType.NChar;
+                else if (col.DataType.SqlDataType == SqlDataType.NVarChar)
+                    newType = SqlDataType.NVarChar;
+                else if (col.DataType.SqlDataType == SqlDataType.NChar)
+                    newType = SqlDataType.NChar;
+                else
+                    throw new Exception(String.Format("The column type {0} is unknown. Cannot alter column.", col.DataType.SqlDataType.ToString()));
+            }
+            else
+            {
+                if (col.DataType.SqlDataType == SqlDataType.VarChar)
+                    newType = SqlDataType.VarChar;
+                else if (col.DataType.SqlDataType == SqlDataType.Char)
+                    newType = SqlDataType.Char;
+                else if (col.DataType.SqlDataType == SqlDataType.NVarChar)
+                    newType = SqlDataType.VarChar;
+                else if (col.DataType.SqlDataType == SqlDataType.NChar)
+                    newType = SqlDataType.Char;
+                else
+                    throw new Exception(String.Format("The column type {0} is unknown. Cannot alter column.", col.DataType.SqlDataType.ToString()));
+            }
 
-            col.DataType = new DataType(UnicodeEnabled ? SqlDataType.NVarChar : SqlDataType.VarChar, col.DataType.MaximumLength);
+            OpenDbConnection();
+            SqlCommand cmd;
+
+            // Drop the indexes on the field
+            if (!String.IsNullOrEmpty(dropScript))
+            {
+                cmd = dbConnection.CreateCommand();
+                cmd.CommandText = dropScript;
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandTimeout = 3600;
+                cmd.ExecuteNonQuery();
+            }
+
+            // Actually alter the column type (using SMO)
+
+            col.DataType = new DataType(newType, col.DataType.MaximumLength);
 
             col.Alter();
 
             // restores the indexes on the field
-            cmd = dbConnection.CreateCommand();
-            cmd.CommandText = createScript;
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandTimeout = 3600;
-            cmd.ExecuteNonQuery();
+            if (!String.IsNullOrEmpty(createScript))
+            {
+                cmd = dbConnection.CreateCommand();
+                cmd.CommandText = createScript;
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandTimeout = 3600;
+                cmd.ExecuteNonQuery();
+            }
 
             CloseConnection();
         }
@@ -231,6 +266,14 @@ ORDER BY 1, 2;
             }
 
             return script.ToString();
+        }
+
+        public void ApplyActionsToDb(FieldAction[] actions)
+        {
+            foreach (var action in actions)
+            {
+                this.SetUnicodeOnDbField(action.FieldInfo, action.NewState == FieldState.Unicode);
+            }
         }
     }
 }

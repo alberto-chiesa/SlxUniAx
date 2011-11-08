@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbHandler.cs" />
+    <Compile Include="FieldAction.cs" />
     <Compile Include="FieldInformation.cs" />
     <Compile Include="FieldInformationCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

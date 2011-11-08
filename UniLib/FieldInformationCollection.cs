@@ -40,6 +40,34 @@ namespace Gianos.UniLib
             }
         }
 
+        public String[] GetTablesList()
+        {
+            List<String> tablesList = new List<string>();
+
+            foreach (string tableName in this.tables.Keys)
+            {
+                var t = this.tables[tableName];
+
+                foreach (var fieldName in t.Keys)
+                {
+                    // I need at least a field which is on the db as varchar or nvarchar AND
+                    // which is a Text or UnicodeText in the model
+                    // I do this check watching to slxType and sqlType
+                    if (
+                            (!String.IsNullOrEmpty(t[fieldName].slxType))
+                            &&
+                            (!String.IsNullOrEmpty(t[fieldName].sqlType))
+                        )
+                    {
+                        tablesList.Add(tableName);
+                        break;
+                    }
+                }
+            }
+
+            return tablesList.ToArray();
+        }
+
         /// <summary>
         /// Searches and inits a field into the tables/fields collection
         /// </summary>
@@ -83,6 +111,35 @@ namespace Gianos.UniLib
             }
 
             return field;
+        }
+
+        public FieldAction[] GetActions()
+        {
+            var actions = new List<FieldAction>();
+            foreach(var tableName in this.tables.Keys)
+            {
+                var table = tables[tableName];
+
+                foreach (var fieldName in table.Keys)
+                {
+                    var field = table[fieldName];
+
+                    if ((field.NewState != FieldState.Unspecified)
+                        &&
+                        (field.State != field.NewState))
+                    {
+                        actions.Add(new FieldAction()
+                        {
+                            TableName = tableName,
+                            FieldName = fieldName,
+                            NewState = field.NewState,
+                            FieldInfo = field
+                        });
+                    }
+                }
+            }
+
+            return actions.ToArray();
         }
     }
 }

@@ -152,5 +152,13 @@ namespace Gianos.UniLib
                 throw e;// new Exception("Error reading entity model files!");
             }
         }
+
+        public void ApplyActionsToModel(FieldAction[] actions)
+        {
+            foreach (var action in actions)
+            {
+                this.SetUnicodeOnSlxField(action.FieldInfo, action.NewState == FieldState.Unicode);
+            }
+        }
     }
 }

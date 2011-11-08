@@ -20,8 +20,11 @@ namespace Gianos.SlxUniAxTest
             fields = dbHandler.ReadTableDataFromSLXDb(fields);
             var f = fields["BVSTORE"]["COD_COUNTRY"];
 
+            var s = f.State;
+            f = fields["ACCOUNT"]["ACCOUNT"];
+            s = f.State;
             //model.SetUnicodeOnSlxField(f, true);
-            dbHandler.SetUnicodeOnDbField(f, true);
+            //dbHandler.SetUnicodeOnDbField(f, true);
             //var s = dbHandler.GetCreateScriptForIndexes("C_BASE_TABLE", "NETSALEEUR");
             //Console.Write(s);
         }
