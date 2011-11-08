@@ -165,7 +165,7 @@
             this.tabSetup.Location = new System.Drawing.Point(4, 22);
             this.tabSetup.Name = "tabSetup";
             this.tabSetup.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSetup.Size = new System.Drawing.Size(510, 285);
+            this.tabSetup.Size = new System.Drawing.Size(573, 285);
             this.tabSetup.TabIndex = 0;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
@@ -203,7 +203,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(504, 279);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(567, 279);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // txtServer
@@ -211,25 +211,25 @@
             this.txtServer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtServer.Location = new System.Drawing.Point(153, 5);
             this.txtServer.Name = "txtServer";
-            this.txtServer.Size = new System.Drawing.Size(348, 20);
+            this.txtServer.Size = new System.Drawing.Size(411, 20);
             this.txtServer.TabIndex = 0;
-            this.txtServer.Text = ".\\ACA2008";
+            this.txtServer.Text = "localhost";
             // 
             // txtDatabase
             // 
             this.txtDatabase.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDatabase.Location = new System.Drawing.Point(153, 35);
             this.txtDatabase.Name = "txtDatabase";
-            this.txtDatabase.Size = new System.Drawing.Size(348, 20);
+            this.txtDatabase.Size = new System.Drawing.Size(411, 20);
             this.txtDatabase.TabIndex = 1;
-            this.txtDatabase.Text = "BVSLX_PROD";
+            this.txtDatabase.Text = "saleslogix_eval";
             // 
             // txtUser
             // 
             this.txtUser.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUser.Location = new System.Drawing.Point(153, 65);
             this.txtUser.Name = "txtUser";
-            this.txtUser.Size = new System.Drawing.Size(348, 20);
+            this.txtUser.Size = new System.Drawing.Size(411, 20);
             this.txtUser.TabIndex = 2;
             this.txtUser.Text = "sysdba";
             // 
@@ -239,7 +239,7 @@
             this.txtPassword.Location = new System.Drawing.Point(153, 95);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Size = new System.Drawing.Size(348, 20);
+            this.txtPassword.Size = new System.Drawing.Size(411, 20);
             this.txtPassword.TabIndex = 3;
             this.txtPassword.Text = "masterkey";
             // 
@@ -248,7 +248,7 @@
             this.btnTestDb.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTestDb.Location = new System.Drawing.Point(153, 123);
             this.btnTestDb.Name = "btnTestDb";
-            this.btnTestDb.Size = new System.Drawing.Size(348, 23);
+            this.btnTestDb.Size = new System.Drawing.Size(411, 23);
             this.btnTestDb.TabIndex = 4;
             this.btnTestDb.Text = "Init Db Connection";
             this.btnTestDb.UseVisualStyleBackColor = true;
@@ -259,7 +259,7 @@
             this.txtFolderModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.txtFolderModel.Location = new System.Drawing.Point(153, 185);
             this.txtFolderModel.Name = "txtFolderModel";
-            this.txtFolderModel.Size = new System.Drawing.Size(348, 20);
+            this.txtFolderModel.Size = new System.Drawing.Size(411, 20);
             this.txtFolderModel.TabIndex = 9;
             this.txtFolderModel.Text = "C:\\Users\\ACA.GIANOS\\Documents\\Dev\\bvweb\\Model";
             // 
@@ -279,7 +279,7 @@
             this.btnTestModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTestModel.Location = new System.Drawing.Point(153, 213);
             this.btnTestModel.Name = "btnTestModel";
-            this.btnTestModel.Size = new System.Drawing.Size(348, 23);
+            this.btnTestModel.Size = new System.Drawing.Size(411, 23);
             this.btnTestModel.TabIndex = 11;
             this.btnTestModel.Text = "Test Model Folder";
             this.btnTestModel.UseVisualStyleBackColor = true;
@@ -293,7 +293,7 @@
             this.btnLoad.Enabled = false;
             this.btnLoad.Location = new System.Drawing.Point(3, 253);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(498, 23);
+            this.btnLoad.Size = new System.Drawing.Size(561, 23);
             this.btnLoad.TabIndex = 12;
             this.btnLoad.Text = "Load Field Data!";
             this.btnLoad.UseVisualStyleBackColor = true;
