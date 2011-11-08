@@ -10,7 +10,9 @@ namespace Gianos.UniLib
         public string tableName { get; private set; }
         public string fieldName { get; private set; }
         public string sqlType { get; set; }
+        public int sqlLength { get; set; }
         public string slxType { get; set; }
+        public string slxLength { get; set; }
 
         public FieldInformation(string tableName, string fieldName)
         {
