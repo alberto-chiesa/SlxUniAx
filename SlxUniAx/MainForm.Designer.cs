@@ -50,17 +50,18 @@
             this.btnLoad = new System.Windows.Forms.Button();
             this.tabFields = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnDoDamage = new System.Windows.Forms.Button();
             this.treeFields = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btnSetUnicode = new System.Windows.Forms.Button();
             this.btnSetAnsi = new System.Windows.Forms.Button();
             this.lblFieldDesc = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.modelBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnDoDamage = new System.Windows.Forms.Button();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -185,10 +186,10 @@
             this.tableLayoutPanel1.Controls.Add(label2, 0, 1);
             this.tableLayoutPanel1.Controls.Add(label3, 0, 2);
             this.tableLayoutPanel1.Controls.Add(label4, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.txtFolderModel, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.btnSelModel, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.btnTestModel, 1, 7);
             this.tableLayoutPanel1.Controls.Add(this.btnLoad, 0, 8);
+            this.tableLayoutPanel1.Controls.Add(this.btnSelModel, 0, 5);
+            this.tableLayoutPanel1.Controls.Add(this.txtFolderModel, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.btnTestModel, 1, 6);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -257,16 +258,16 @@
             // txtFolderModel
             // 
             this.txtFolderModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFolderModel.Location = new System.Drawing.Point(153, 185);
+            this.txtFolderModel.Location = new System.Drawing.Point(153, 155);
             this.txtFolderModel.Name = "txtFolderModel";
             this.txtFolderModel.Size = new System.Drawing.Size(411, 20);
             this.txtFolderModel.TabIndex = 9;
-            this.txtFolderModel.Text = "C:\\Users\\ACA.GIANOS\\Documents\\Dev\\bvweb\\Model";
+            this.txtFolderModel.Text = "C:\\SlxWeb\\Model";
             // 
             // btnSelModel
             // 
             this.btnSelModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSelModel.Location = new System.Drawing.Point(3, 183);
+            this.btnSelModel.Location = new System.Drawing.Point(3, 153);
             this.btnSelModel.Name = "btnSelModel";
             this.btnSelModel.Size = new System.Drawing.Size(144, 23);
             this.btnSelModel.TabIndex = 10;
@@ -277,7 +278,7 @@
             // btnTestModel
             // 
             this.btnTestModel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestModel.Location = new System.Drawing.Point(153, 213);
+            this.btnTestModel.Location = new System.Drawing.Point(153, 183);
             this.btnTestModel.Name = "btnTestModel";
             this.btnTestModel.Size = new System.Drawing.Size(411, 23);
             this.btnTestModel.TabIndex = 11;
@@ -291,9 +292,10 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.btnLoad, 2);
             this.btnLoad.Enabled = false;
-            this.btnLoad.Location = new System.Drawing.Point(3, 253);
+            this.btnLoad.Location = new System.Drawing.Point(3, 243);
+            this.btnLoad.MinimumSize = new System.Drawing.Size(0, 40);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(561, 23);
+            this.btnLoad.Size = new System.Drawing.Size(561, 40);
             this.btnLoad.TabIndex = 12;
             this.btnLoad.Text = "Load Field Data!";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -315,17 +317,33 @@
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.btnDoDamage, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.btnDoDamage, 0, 2);
             this.tableLayoutPanel2.Controls.Add(this.treeFields, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.tableLayoutPanel3, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label6, 0, 1);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowCount = 3;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(567, 279);
             this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // btnDoDamage
+            // 
+            this.btnDoDamage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel2.SetColumnSpan(this.btnDoDamage, 2);
+            this.btnDoDamage.Location = new System.Drawing.Point(3, 252);
+            this.btnDoDamage.Name = "btnDoDamage";
+            this.btnDoDamage.Size = new System.Drawing.Size(561, 23);
+            this.btnDoDamage.TabIndex = 2;
+            this.btnDoDamage.Text = "Apply Field Changes";
+            this.btnDoDamage.UseVisualStyleBackColor = true;
+            this.btnDoDamage.Click += new System.EventHandler(this.btnDoDamage_Click);
             // 
             // treeFields
             // 
@@ -335,7 +353,7 @@
             this.treeFields.Location = new System.Drawing.Point(3, 3);
             this.treeFields.Name = "treeFields";
             this.treeFields.SelectedImageIndex = 0;
-            this.treeFields.Size = new System.Drawing.Size(277, 243);
+            this.treeFields.Size = new System.Drawing.Size(277, 183);
             this.treeFields.TabIndex = 0;
             this.treeFields.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeFields_AfterSelect);
             // 
@@ -344,6 +362,11 @@
             this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "table.ico");
+            this.imageList1.Images.SetKeyName(1, "Text.gif");
+            this.imageList1.Images.SetKeyName(2, "Unicode.gif");
+            this.imageList1.Images.SetKeyName(3, "ToText.gif");
+            this.imageList1.Images.SetKeyName(4, "ToUnicode.gif");
+            this.imageList1.Images.SetKeyName(5, "Error.gif");
             // 
             // tableLayoutPanel3
             // 
@@ -366,7 +389,7 @@
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(278, 243);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(278, 183);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
             // btnSetUnicode
@@ -406,6 +429,20 @@
             this.lblFieldDesc.TabIndex = 2;
             this.lblFieldDesc.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.label6, 2);
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(3, 199);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(561, 50);
+            this.label6.TabIndex = 3;
+            this.label6.Text = "Do NOT press the Apply button if you don\'t have a backup of EVERYTHING! Please.";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // tabOutput
             // 
             this.tabOutput.Controls.Add(this.tabPageOutput);
@@ -437,19 +474,6 @@
             this.textBox1.Size = new System.Drawing.Size(567, 90);
             this.textBox1.TabIndex = 0;
             // 
-            // btnDoDamage
-            // 
-            this.btnDoDamage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel2.SetColumnSpan(this.btnDoDamage, 2);
-            this.btnDoDamage.Location = new System.Drawing.Point(3, 252);
-            this.btnDoDamage.Name = "btnDoDamage";
-            this.btnDoDamage.Size = new System.Drawing.Size(561, 23);
-            this.btnDoDamage.TabIndex = 2;
-            this.btnDoDamage.Text = "Apply Field Changes";
-            this.btnDoDamage.UseVisualStyleBackColor = true;
-            this.btnDoDamage.Click += new System.EventHandler(this.btnDoDamage_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,7 +481,7 @@
             this.ClientSize = new System.Drawing.Size(581, 437);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Unicode Accelerator for SalesLogix - by Gianos Consulting";
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
@@ -468,6 +492,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.tabFields.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
@@ -504,6 +529,7 @@
         private System.Windows.Forms.Button btnSetAnsi;
         private System.Windows.Forms.Label lblFieldDesc;
         private System.Windows.Forms.Button btnDoDamage;
+        private System.Windows.Forms.Label label6;
     }
 }
 

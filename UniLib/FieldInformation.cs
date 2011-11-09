@@ -58,7 +58,7 @@ namespace Gianos.UniLib
 
                 if (slxType.Equals("UnicodeTextDataType", StringComparison.InvariantCultureIgnoreCase))
                     return true;
-                if (sqlType.Equals("TextDataType", StringComparison.InvariantCultureIgnoreCase))
+                if (slxType.Equals("TextDataType", StringComparison.InvariantCultureIgnoreCase))
                     return false;
 
                 return null;

@@ -10,6 +10,16 @@ using Gianos.UniLib;
 
 namespace SlxUniAx
 {
+    public enum StatusIcons
+    {
+        Table = 0,
+        Text = 1,
+        Unicode = 2,
+        ToText = 3,
+        ToUnicode = 4,
+        Error = 5
+    }
+
     public partial class Form1 : Form
     {
         private DbHandler dbHandler;
@@ -106,9 +116,15 @@ namespace SlxUniAx
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
+            LoadFieldInformations(true);
+        }
+
+        private void LoadFieldInformations(bool doCleanLog)
+        {
             try
             {
-                this.CleanLog();
+                if (doCleanLog) this.CleanLog();
+
                 this.Log("Started metadata collection...");
                 this.Log("");
                 this.Log("Accessing db data...");
@@ -141,6 +157,7 @@ namespace SlxUniAx
             foreach(string tableName in tables)
             {
                 var tableNode = treeFields.Nodes.Add(tableName);
+                tableNode.ImageIndex = (int)StatusIcons.Table;
 
                 //tableNode.Nodes
                 var tableFields = fields[tableName];
@@ -156,6 +173,16 @@ namespace SlxUniAx
                     var fieldNode = tableNode.Nodes.Add(fieldName);
 
                     fieldNode.Tag = tableFields[fieldName];
+
+                    StatusIcons nodeIcon =
+                        tableFields[fieldName].State == FieldState.Ansi ? StatusIcons.Text :
+                        tableFields[fieldName].State == FieldState.Unicode ? StatusIcons.Unicode :
+                        StatusIcons.Error;
+
+                    fieldNode.SelectedImageIndex = fieldNode.ImageIndex = (int)nodeIcon;
+
+                    if (nodeIcon == StatusIcons.Error)
+                        tableNode.SelectedImageIndex = tableNode.ImageIndex = (int)nodeIcon;
                 }
 
                 tableNode.Collapse();
@@ -207,6 +234,9 @@ namespace SlxUniAx
             {
                 selectedField.NewState = newState;
             }
+
+            treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
+                (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
         }
 
         /// <summary>
@@ -227,9 +257,19 @@ namespace SlxUniAx
 
             if (res == DialogResult.Yes)
             {
-                this.dbHandler.ApplyActionsToDb(actions);
+                this.Log("Updating model...");
                 this.slxModelHandler.ApplyActionsToModel(actions);
+                
+                this.Log("Updating database...");
+                this.dbHandler.ApplyActionsToDb(actions);
             }
+
+            this.Log("");
+            this.Log("Update Complete!");
+            this.Log("");
+            this.Log("Reloading entity data...");
+
+            LoadFieldInformations(false);
         }
 
         /// <summary>
