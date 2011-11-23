@@ -157,6 +157,11 @@ ORDER BY 1, 2;
 
         public void SetUnicodeOnDbField(FieldInformation field, bool UnicodeEnabled)
         {
+            SetUnicodeOnDbField(field, UnicodeEnabled, null);
+        }
+
+        public void SetUnicodeOnDbField(FieldInformation field, bool UnicodeEnabled, int? newLength)
+        {
             string createScript = GetCreateScriptForIndexes(field.tableName, field.fieldName),
                 dropScript = GetDropScriptForIndexes(field.tableName, field.fieldName);
 
@@ -207,7 +212,7 @@ ORDER BY 1, 2;
 
             // Actually alter the column type (using SMO)
 
-            col.DataType = new DataType(newType, col.DataType.MaximumLength);
+            col.DataType = new DataType(newType, (newLength ?? col.DataType.MaximumLength));
 
             col.Alter();
 
@@ -226,15 +231,15 @@ ORDER BY 1, 2;
 
         public string GetCreateScriptForIndexes(string tableName, string columnName)
         {
-            return GetCreateScriptForIndexes(tableName, columnName, false);
+            return GetDropOrCreateScriptForIndexes(tableName, columnName, false);
         }
 
         public string GetDropScriptForIndexes(string tableName, string columnName)
         {
-            return GetCreateScriptForIndexes(tableName, columnName, true);
+            return GetDropOrCreateScriptForIndexes(tableName, columnName, true);
         }
 
-        public string GetCreateScriptForIndexes(string tableName, string columnName, bool doDrop)
+        public string GetDropOrCreateScriptForIndexes(string tableName, string columnName, bool doDrop)
         {
             StringCollection sc = new StringCollection();
             ScriptingOptions so = new ScriptingOptions();
