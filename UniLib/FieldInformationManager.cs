@@ -5,16 +5,92 @@ using System.Text;
 
 namespace Gianos.UniLib
 {
+    public delegate void LogMethod(string message);
+
     /// <summary>
     /// Class containing Informations about every field in the DB
     /// </summary>
-    public class FieldInformationCollection
+    public class FieldInformationManager
     {
         private Dictionary<string, Dictionary<string, FieldInformation>> tables;
+        private DbHandler dbHandler;
+        private SLXModelHandler slxModelHandler;
 
-        public FieldInformationCollection()
+        private LogMethod Log;
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        public FieldInformationManager()
         {
-            this.tables = new Dictionary<string,Dictionary<string,FieldInformation>>();
+            this.tables = new Dictionary<string, Dictionary<string, FieldInformation>>();
+            dbHandler = null;
+            slxModelHandler = null;
+
+            // no logger: log to console
+            this.Log = delegate(string Msg) { Console.WriteLine(Msg); };
+        }
+
+        /// <summary>
+        /// Constructor linking to a Logger method
+        /// </summary>
+        /// <param name="loggingMethod"></param>
+        public FieldInformationManager(LogMethod loggingMethod)
+        {
+            this.Log = loggingMethod;
+            this.tables = new Dictionary<string, Dictionary<string, FieldInformation>>();
+            dbHandler = null;
+            slxModelHandler = null;
+        }
+
+        /// <summary>
+        /// Setup the connection to the database
+        /// </summary>
+        /// <param name="dbHandler"></param>
+        public void LinkToDb(DbHandler dbHandler)
+        {
+            this.dbHandler = dbHandler;
+        }
+
+        /// <summary>
+        /// Setup the connection to slx model
+        /// </summary>
+        /// <param name="slxModelHandler"></param>
+        public void LinkToSlxModel(SLXModelHandler slxModelHandler)
+        {
+            this.slxModelHandler = slxModelHandler;
+        }
+
+        /// <summary>
+        /// Reads information from both database and model
+        /// </summary>
+        public bool LoadFieldInformations()
+        {
+            this.tables = new Dictionary<string, Dictionary<string, FieldInformation>>();
+
+            try
+            {
+                this.Log("Started metadata collection...");
+                this.Log("");
+                this.Log("Accessing db data...");
+
+                this.dbHandler.ReadTableDataFromSLXDb(this);
+
+                this.Log("done. Reading data from model...");
+
+                this.slxModelHandler.FindEntityModels(this);
+                this.Log("Done. Load completed succesfully!");
+            }
+            catch (Exception exc)
+            {
+                this.Log("Whoops. Seems something went wrong.");
+                this.Log("Caught exception:");
+                this.Log(exc.Message);
+
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -140,6 +216,27 @@ namespace Gianos.UniLib
             }
 
             return actions.ToArray();
+        }
+
+        /// <summary>
+        /// Executes the specified actions on the db and on slx model
+        /// </summary>
+        public void PerformActions()
+        {
+            this.Log("Reading actions to be performed...");
+
+            var actions = GetActions();
+
+            this.Log(actions.Length + " found.");
+
+            this.Log("Updating model...");
+            this.slxModelHandler.ApplyActionsToModel(actions);
+
+            this.Log("Updating database...");
+            this.dbHandler.ApplyActionsToDb(actions);
+
+            this.Log("");
+            this.Log("Update Complete!");
         }
     }
 }

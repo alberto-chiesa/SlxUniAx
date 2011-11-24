@@ -36,7 +36,7 @@
             System.Windows.Forms.Label label5;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControlUpper = new System.Windows.Forms.TabControl();
             this.tabSetup = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.txtServer = new System.Windows.Forms.TextBox();
@@ -70,7 +70,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
+            this.tabControlUpper.SuspendLayout();
             this.tabSetup.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tabFields.SuspendLayout();
@@ -141,7 +141,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.tabControl1);
+            this.splitContainer1.Panel1.Controls.Add(this.tabControlUpper);
             this.splitContainer1.Panel1MinSize = 300;
             // 
             // splitContainer1.Panel2
@@ -153,14 +153,14 @@
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabSetup);
-            this.tabControl1.Controls.Add(this.tabFields);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(581, 317);
-            this.tabControl1.TabIndex = 0;
+            this.tabControlUpper.Controls.Add(this.tabSetup);
+            this.tabControlUpper.Controls.Add(this.tabFields);
+            this.tabControlUpper.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControlUpper.Location = new System.Drawing.Point(0, 0);
+            this.tabControlUpper.Name = "tabControl1";
+            this.tabControlUpper.SelectedIndex = 0;
+            this.tabControlUpper.Size = new System.Drawing.Size(581, 317);
+            this.tabControlUpper.TabIndex = 0;
             // 
             // tabSetup
             // 
@@ -488,7 +488,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
-            this.tabControl1.ResumeLayout(false);
+            this.tabControlUpper.ResumeLayout(false);
             this.tabSetup.ResumeLayout(false);
             this.tabSetup.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -510,7 +510,7 @@
         private System.Windows.Forms.TabControl tabOutput;
         private System.Windows.Forms.TabPage tabPageOutput;
         private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabControl tabControlUpper;
         private System.Windows.Forms.TabPage tabSetup;
         private System.Windows.Forms.TabPage tabFields;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;

@@ -115,10 +115,10 @@ ORDER BY 1, 2;
         /// filled with field data read from the db
         /// </summary>
         /// <returns></returns>
-        public FieldInformationCollection ReadTableDataFromSLXDb()
+        public FieldInformationManager ReadTableDataFromSLXDb()
         {
             // just update a empty collection
-            return this.ReadTableDataFromSLXDb(new FieldInformationCollection());
+            return this.ReadTableDataFromSLXDb(new FieldInformationManager());
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ ORDER BY 1, 2;
         /// </summary>
         /// <param name="dbFields">The field collection to update</param>
         /// <returns></returns>
-        public FieldInformationCollection ReadTableDataFromSLXDb(FieldInformationCollection dbFields)
+        public FieldInformationManager ReadTableDataFromSLXDb(FieldInformationManager dbFields)
         {
             OpenDbConnection();
             var cmd = dbConnection.CreateCommand();

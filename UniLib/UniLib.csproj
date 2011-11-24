@@ -57,7 +57,7 @@
     <Compile Include="DbHandler.cs" />
     <Compile Include="FieldAction.cs" />
     <Compile Include="FieldInformation.cs" />
-    <Compile Include="FieldInformationCollection.cs" />
+    <Compile Include="FieldInformationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SLXModelHandler.cs" />
   </ItemGroup>

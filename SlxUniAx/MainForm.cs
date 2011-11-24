@@ -25,10 +25,10 @@ namespace SlxUniAx
         private DbHandler dbHandler;
         private bool isDbHandlerInitialized;
 
-        private SLXModelHandler slxModelHandler;
+        //private SLXModelHandler slxModelHandler;
         private bool isSlxModelInitialized;
 
-        private FieldInformationCollection fields;
+        private FieldInformationManager fields;
 
         public void Log(string message)
         {
@@ -48,6 +48,7 @@ namespace SlxUniAx
             InitializeComponent();
             isDbHandlerInitialized = false;
             isSlxModelInitialized = false;
+            this.fields = new FieldInformationManager(this.Log);
         }
 
         private void btnSelModel_Click(object sender, EventArgs e)
@@ -80,6 +81,9 @@ namespace SlxUniAx
             }
 
             isDbHandlerInitialized = true;
+
+            fields.LinkToDb(dbHandler);
+
             this.RefreshLoadButton();
 
             this.Log("Database Connection Completed!\r\nTest Ok");
@@ -87,6 +91,8 @@ namespace SlxUniAx
 
         private void btnTestModel_Click(object sender, EventArgs e)
         {
+            SLXModelHandler slxModelHandler;
+
             this.CleanLog();
 
             try
@@ -104,6 +110,9 @@ namespace SlxUniAx
             }
 
             isSlxModelInitialized = true;
+
+            fields.LinkToSlxModel(slxModelHandler);
+
             this.RefreshLoadButton();
 
             this.Log("Model Test Ok!");
@@ -119,35 +128,24 @@ namespace SlxUniAx
             LoadFieldInformations(true);
         }
 
+        /// <summary>
+        /// Triggers Field Information load and treeview rebuil
+        /// </summary>
+        /// <param name="doCleanLog"></param>
         private void LoadFieldInformations(bool doCleanLog)
         {
-            try
-            {
-                if (doCleanLog) this.CleanLog();
+            if (doCleanLog) this.CleanLog();
 
-                this.Log("Started metadata collection...");
-                this.Log("");
-                this.Log("Accessing db data...");
+            var loadOk = fields.LoadFieldInformations();
 
-                this.fields = this.dbHandler.ReadTableDataFromSLXDb();
+            if (!loadOk) return;
 
-                this.Log("done. Reading data from model...");
-
-                this.fields = this.slxModelHandler.FindEntityModels(fields);
-                this.Log("Done. Load completed succesfully!");
-
-                this.FillTreeView();
-
-                this.tabControl1.SelectedTab = this.tabFields;
-            }
-            catch (Exception exc)
-            {
-                this.Log("Whoops. Seems something went wrong.");
-                this.Log("Caught exception:");
-                this.Log(exc.Message);
-            }
+            this.FillTreeView();
         }
 
+        /// <summary>
+        /// Builds the treeview from FieldInformation data
+        /// </summary>
         private void FillTreeView()
         {
             treeFields.Nodes.Clear();
@@ -172,6 +170,7 @@ namespace SlxUniAx
 
                     var fieldNode = tableNode.Nodes.Add(fieldName);
 
+                    // link the node to the corresponding FieldInformation object
                     fieldNode.Tag = tableFields[fieldName];
 
                     StatusIcons nodeIcon =
@@ -181,62 +180,68 @@ namespace SlxUniAx
 
                     fieldNode.SelectedImageIndex = fieldNode.ImageIndex = (int)nodeIcon;
 
+                    // error condition propagates to table node
                     if (nodeIcon == StatusIcons.Error)
                         tableNode.SelectedImageIndex = tableNode.ImageIndex = (int)nodeIcon;
                 }
 
+                // collapse all table nodes
                 tableNode.Collapse();
             }
+
+            // switch tab
+            this.tabControlUpper.SelectedTab = this.tabFields;
         }
 
+        /// <summary>
+        /// Refresh the field description label
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void treeFields_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            const string descriptionTemplate =
-                @"{0}
-{1}
-{2}({3})
-{4}({5})";
+            lblFieldDesc.Text = String.Empty;
+
             FieldInformation selectedField = e.Node.Tag as FieldInformation;
 
-            string fieldDescription = String.Empty;
-
-            if (selectedField != null)
-            {
-                fieldDescription = String.Format(descriptionTemplate,
-                    selectedField.tableName,
-                    selectedField.fieldName,
-                    selectedField.slxType,
-                    selectedField.slxLength,
-                    selectedField.sqlType,
-                    selectedField.sqlLength);
-            }
-
-            lblFieldDesc.Text = fieldDescription;
+            if (selectedField != null) lblFieldDesc.Text = selectedField.ToString();
         }
 
+        /// <summary>
+        /// Set-to-Unicode button handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSetUnicode_Click(object sender, EventArgs e)
         {
             SetUnicodeness(FieldState.Unicode);
         }
 
+        /// <summary>
+        /// Set-to-Text button handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSetAnsi_Click(object sender, EventArgs e)
         {
             SetUnicodeness(FieldState.Ansi);
         }
 
+        /// <summary>
+        /// Sets the new state of a field to Unicode or text
+        /// </summary>
+        /// <param name="newState"></param>
         private void SetUnicodeness(FieldState newState)
         {
             FieldInformation selectedField = treeFields.SelectedNode.Tag as FieldInformation;
 
-            string fieldDescription = String.Empty;
-
             if (selectedField != null)
             {
                 selectedField.NewState = newState;
-            }
 
-            treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
-                (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
+                treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
+                    (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
+            }
         }
 
         /// <summary>
@@ -247,29 +252,16 @@ namespace SlxUniAx
         private void btnDoDamage_Click(object sender, EventArgs e)
         {
             this.CleanLog();
-            this.Log("Reading actions to be performed...");
 
-            var actions = fields.GetActions();
-
-            this.Log(actions.Length + " found.");
-
-            var res = ConfirmActions(actions);
-
-            if (res == DialogResult.Yes)
+            if (this.ConfirmActions() == DialogResult.Yes)
             {
-                this.Log("Updating model...");
-                this.slxModelHandler.ApplyActionsToModel(actions);
-                
-                this.Log("Updating database...");
-                this.dbHandler.ApplyActionsToDb(actions);
+                fields.PerformActions();
+
+                this.Log("");
+                this.Log("Reloading entity data...");
+
+                LoadFieldInformations(false);
             }
-
-            this.Log("");
-            this.Log("Update Complete!");
-            this.Log("");
-            this.Log("Reloading entity data...");
-
-            LoadFieldInformations(false);
         }
 
         /// <summary>
@@ -279,11 +271,14 @@ namespace SlxUniAx
         /// <param name="actions">The list of the actions to be performed
         /// onto fields</param>
         /// <returns></returns>
-        private static DialogResult ConfirmActions(FieldAction[] actions)
+        private DialogResult ConfirmActions()
         {
+            FieldAction[] actions = fields.GetActions();
 
             var sb = new StringBuilder();
+
             sb.AppendLine("Fields to be updated:");
+            
             for (int i = 0; i < Math.Min(10, actions.Length); i++)
             {
                 sb.AppendLine(actions[i].ToString());

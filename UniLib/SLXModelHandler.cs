@@ -42,12 +42,12 @@ namespace Gianos.UniLib
             }
         }
 
-        public FieldInformationCollection FindEntityModels()
+        public FieldInformationManager FindEntityModels()
         {
-            return FindEntityModels(new FieldInformationCollection());
+            return FindEntityModels(new FieldInformationManager());
         }
 
-        public FieldInformationCollection FindEntityModels(FieldInformationCollection dbFields)
+        public FieldInformationManager FindEntityModels(FieldInformationManager dbFields)
         {
             /* Example XML property snippet:
              * <property xsi:type="OrmFieldProperty" id="d6e61b3a-4663-4d89-a605-beb0fc07cae2" lastModifiedUtc="2009-04-20T02:51:53.3856462Z" name="LastName" audited="false" columnName="LASTNAME" maxLength="50" precision="0" scale="0" ordinal="5" isReadOnly="false" isDynamic="false">
@@ -105,7 +105,13 @@ namespace Gianos.UniLib
                             var propertyName = property.GetAttribute("columnName", String.Empty).ToString();
                             FieldInformation f = dbFields.InitField(tableName.ToUpper(), propertyName.ToUpper());
                             f.slxType = slxType;
-                            f.slxLength = property.GetAttribute("maxLength", String.Empty).ToString();
+                            var lengthStr = property.GetAttribute("maxLength", String.Empty).ToString();
+                            int len;
+
+                            if (Int32.TryParse(lengthStr, out len))
+                                f.slxLength = len;
+                            else
+                                f.slxLength = 0;
                         }
                     }
                 }
