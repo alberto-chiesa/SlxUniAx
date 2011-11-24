@@ -151,13 +151,13 @@
             this.splitContainer1.SplitterDistance = 317;
             this.splitContainer1.TabIndex = 0;
             // 
-            // tabControl1
+            // tabControlUpper
             // 
             this.tabControlUpper.Controls.Add(this.tabSetup);
             this.tabControlUpper.Controls.Add(this.tabFields);
             this.tabControlUpper.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControlUpper.Location = new System.Drawing.Point(0, 0);
-            this.tabControlUpper.Name = "tabControl1";
+            this.tabControlUpper.Name = "tabControlUpper";
             this.tabControlUpper.SelectedIndex = 0;
             this.tabControlUpper.Size = new System.Drawing.Size(581, 317);
             this.tabControlUpper.TabIndex = 0;
@@ -373,14 +373,14 @@
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnCount = 3;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.Controls.Add(label5, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.btnSetUnicode, 0, 4);
             this.tableLayoutPanel3.Controls.Add(this.btnSetAnsi, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.lblFieldDesc, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(286, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 8;
@@ -399,10 +399,11 @@
             // 
             this.btnSetUnicode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel3.SetColumnSpan(this.btnSetUnicode, 2);
+            this.tableLayoutPanel3.SetColumnSpan(this.btnSetUnicode, 3);
             this.btnSetUnicode.Location = new System.Drawing.Point(3, 123);
+            this.btnSetUnicode.MinimumSize = new System.Drawing.Size(100, 25);
             this.btnSetUnicode.Name = "btnSetUnicode";
-            this.btnSetUnicode.Size = new System.Drawing.Size(272, 23);
+            this.btnSetUnicode.Size = new System.Drawing.Size(272, 25);
             this.btnSetUnicode.TabIndex = 0;
             this.btnSetUnicode.Text = "Set Field As &Unicode";
             this.btnSetUnicode.UseVisualStyleBackColor = true;
@@ -412,10 +413,11 @@
             // 
             this.btnSetAnsi.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel3.SetColumnSpan(this.btnSetAnsi, 2);
+            this.tableLayoutPanel3.SetColumnSpan(this.btnSetAnsi, 3);
             this.btnSetAnsi.Location = new System.Drawing.Point(3, 153);
+            this.btnSetAnsi.MinimumSize = new System.Drawing.Size(100, 25);
             this.btnSetAnsi.Name = "btnSetAnsi";
-            this.btnSetAnsi.Size = new System.Drawing.Size(272, 23);
+            this.btnSetAnsi.Size = new System.Drawing.Size(272, 25);
             this.btnSetAnsi.TabIndex = 1;
             this.btnSetAnsi.Text = "Set Field as Ansi &Text";
             this.btnSetAnsi.UseVisualStyleBackColor = true;
@@ -428,7 +430,7 @@
             this.lblFieldDesc.Location = new System.Drawing.Point(83, 0);
             this.lblFieldDesc.Name = "lblFieldDesc";
             this.tableLayoutPanel3.SetRowSpan(this.lblFieldDesc, 4);
-            this.lblFieldDesc.Size = new System.Drawing.Size(192, 120);
+            this.lblFieldDesc.Size = new System.Drawing.Size(112, 120);
             this.lblFieldDesc.TabIndex = 2;
             this.lblFieldDesc.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
