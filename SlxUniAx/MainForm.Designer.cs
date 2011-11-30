@@ -34,6 +34,7 @@
             System.Windows.Forms.Label label3;
             System.Windows.Forms.Label label4;
             System.Windows.Forms.Label label5;
+            System.Windows.Forms.Label label7;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControlUpper = new System.Windows.Forms.TabControl();
@@ -54,9 +55,11 @@
             this.treeFields = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSetUnicode = new System.Windows.Forms.Button();
-            this.btnSetAnsi = new System.Windows.Forms.Button();
             this.lblFieldDesc = new System.Windows.Forms.Label();
+            this.cmbNewSize = new System.Windows.Forms.ComboBox();
+            this.btnSetAnsi = new System.Windows.Forms.Button();
+            this.btnSetUnicode = new System.Windows.Forms.Button();
+            this.chkKeepSize = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
@@ -67,6 +70,7 @@
             label3 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
+            label7 = new System.Windows.Forms.Label();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -126,10 +130,19 @@
             label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             label5.Location = new System.Drawing.Point(3, 0);
             label5.Name = "label5";
-            this.tableLayoutPanel3.SetRowSpan(label5, 4);
-            label5.Size = new System.Drawing.Size(74, 120);
+            label5.Size = new System.Drawing.Size(74, 70);
             label5.TabIndex = 3;
             label5.Text = "Table:\r\nColumn:\r\nSlxType:\r\nDbType:";
+            // 
+            // label7
+            // 
+            label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            label7.AutoSize = true;
+            label7.Location = new System.Drawing.Point(3, 78);
+            label7.Name = "label7";
+            label7.Size = new System.Drawing.Size(74, 13);
+            label7.TabIndex = 4;
+            label7.Text = "Resize to:";
             // 
             // splitContainer1
             // 
@@ -279,7 +292,7 @@
             this.btnSelModel.Location = new System.Drawing.Point(3, 153);
             this.btnSelModel.Name = "btnSelModel";
             this.btnSelModel.Size = new System.Drawing.Size(144, 23);
-            this.btnSelModel.TabIndex = 10;
+            this.btnSelModel.TabIndex = 9;
             this.btnSelModel.Text = "Select Model Folder";
             this.btnSelModel.UseVisualStyleBackColor = true;
             this.btnSelModel.Click += new System.EventHandler(this.btnSelModel_Click);
@@ -290,7 +303,7 @@
             this.txtFolderModel.Location = new System.Drawing.Point(153, 155);
             this.txtFolderModel.Name = "txtFolderModel";
             this.txtFolderModel.Size = new System.Drawing.Size(411, 20);
-            this.txtFolderModel.TabIndex = 9;
+            this.txtFolderModel.TabIndex = 10;
             this.txtFolderModel.Text = "C:\\SlxWeb\\Model";
             // 
             // btnTestModel
@@ -373,20 +386,21 @@
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.ColumnCount = 3;
+            this.tableLayoutPanel3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.Controls.Add(label5, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.btnSetUnicode, 0, 4);
-            this.tableLayoutPanel3.Controls.Add(this.btnSetAnsi, 0, 5);
             this.tableLayoutPanel3.Controls.Add(this.lblFieldDesc, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(label7, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.cmbNewSize, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.btnSetAnsi, 0, 4);
+            this.tableLayoutPanel3.Controls.Add(this.btnSetUnicode, 0, 3);
+            this.tableLayoutPanel3.Controls.Add(this.chkKeepSize, 1, 2);
             this.tableLayoutPanel3.Location = new System.Drawing.Point(286, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 8;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowCount = 6;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -395,26 +409,52 @@
             this.tableLayoutPanel3.Size = new System.Drawing.Size(278, 189);
             this.tableLayoutPanel3.TabIndex = 1;
             // 
-            // btnSetUnicode
+            // lblFieldDesc
             // 
-            this.btnSetUnicode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.lblFieldDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel3.SetColumnSpan(this.btnSetUnicode, 3);
-            this.btnSetUnicode.Location = new System.Drawing.Point(3, 123);
-            this.btnSetUnicode.MinimumSize = new System.Drawing.Size(100, 25);
-            this.btnSetUnicode.Name = "btnSetUnicode";
-            this.btnSetUnicode.Size = new System.Drawing.Size(272, 25);
-            this.btnSetUnicode.TabIndex = 0;
-            this.btnSetUnicode.Text = "Set Field As &Unicode";
-            this.btnSetUnicode.UseVisualStyleBackColor = true;
-            this.btnSetUnicode.Click += new System.EventHandler(this.btnSetUnicode_Click);
+            this.lblFieldDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFieldDesc.Location = new System.Drawing.Point(83, 0);
+            this.lblFieldDesc.Name = "lblFieldDesc";
+            this.lblFieldDesc.Size = new System.Drawing.Size(192, 70);
+            this.lblFieldDesc.TabIndex = 2;
+            this.lblFieldDesc.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // cmbNewSize
+            // 
+            this.cmbNewSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbNewSize.FormattingEnabled = true;
+            this.cmbNewSize.Items.AddRange(new object[] {
+            "Keep Current",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "12",
+            "15",
+            "20",
+            "25",
+            "30",
+            "40",
+            "50",
+            "75",
+            "100",
+            "200",
+            "300",
+            "400"});
+            this.cmbNewSize.Location = new System.Drawing.Point(83, 74);
+            this.cmbNewSize.Name = "cmbNewSize";
+            this.cmbNewSize.Size = new System.Drawing.Size(192, 21);
+            this.cmbNewSize.TabIndex = 6;
             // 
             // btnSetAnsi
             // 
             this.btnSetAnsi.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.tableLayoutPanel3.SetColumnSpan(this.btnSetAnsi, 3);
-            this.btnSetAnsi.Location = new System.Drawing.Point(3, 153);
+            this.tableLayoutPanel3.SetColumnSpan(this.btnSetAnsi, 2);
+            this.btnSetAnsi.Location = new System.Drawing.Point(3, 163);
             this.btnSetAnsi.MinimumSize = new System.Drawing.Size(100, 25);
             this.btnSetAnsi.Name = "btnSetAnsi";
             this.btnSetAnsi.Size = new System.Drawing.Size(272, 25);
@@ -423,16 +463,31 @@
             this.btnSetAnsi.UseVisualStyleBackColor = true;
             this.btnSetAnsi.Click += new System.EventHandler(this.btnSetAnsi_Click);
             // 
-            // lblFieldDesc
+            // btnSetUnicode
             // 
-            this.lblFieldDesc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblFieldDesc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFieldDesc.Location = new System.Drawing.Point(83, 0);
-            this.lblFieldDesc.Name = "lblFieldDesc";
-            this.tableLayoutPanel3.SetRowSpan(this.lblFieldDesc, 4);
-            this.lblFieldDesc.Size = new System.Drawing.Size(112, 120);
-            this.lblFieldDesc.TabIndex = 2;
-            this.lblFieldDesc.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.btnSetUnicode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tableLayoutPanel3.SetColumnSpan(this.btnSetUnicode, 2);
+            this.btnSetUnicode.Location = new System.Drawing.Point(3, 133);
+            this.btnSetUnicode.MinimumSize = new System.Drawing.Size(100, 25);
+            this.btnSetUnicode.Name = "btnSetUnicode";
+            this.btnSetUnicode.Size = new System.Drawing.Size(272, 25);
+            this.btnSetUnicode.TabIndex = 0;
+            this.btnSetUnicode.Text = "Set Field As &Unicode";
+            this.btnSetUnicode.UseVisualStyleBackColor = true;
+            this.btnSetUnicode.Click += new System.EventHandler(this.btnSetUnicode_Click);
+            // 
+            // chkKeepSize
+            // 
+            this.chkKeepSize.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkKeepSize.AutoSize = true;
+            this.chkKeepSize.Location = new System.Drawing.Point(83, 103);
+            this.chkKeepSize.Name = "chkKeepSize";
+            this.chkKeepSize.Size = new System.Drawing.Size(192, 17);
+            this.chkKeepSize.TabIndex = 7;
+            this.chkKeepSize.Text = "Keep Size for Other Fields";
+            this.chkKeepSize.UseVisualStyleBackColor = true;
             // 
             // label6
             // 
@@ -499,6 +554,7 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
@@ -535,6 +591,8 @@
         private System.Windows.Forms.Label lblFieldDesc;
         private System.Windows.Forms.Button btnDoDamage;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox cmbNewSize;
+        private System.Windows.Forms.CheckBox chkKeepSize;
     }
 }
 

@@ -162,6 +162,8 @@ ORDER BY 1, 2;
 
         public void SetUnicodeOnDbField(FieldInformation field, bool UnicodeEnabled, int? newLength)
         {
+            if (newLength <= 0) newLength = null;
+
             string createScript = GetCreateScriptForIndexes(field.tableName, field.fieldName),
                 dropScript = GetDropScriptForIndexes(field.tableName, field.fieldName);
 
@@ -277,7 +279,7 @@ ORDER BY 1, 2;
         {
             foreach (var action in actions)
             {
-                this.SetUnicodeOnDbField(action.FieldInfo, action.NewState == FieldState.Unicode);
+                this.SetUnicodeOnDbField(action.FieldInfo, action.NewState == FieldState.Unicode, action.NewSize);
             }
         }
     }

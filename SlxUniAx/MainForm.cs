@@ -43,12 +43,15 @@ namespace SlxUniAx
             this.Refresh();
         }
 
+        private const string strKeepCurrent = "Keep Current";
         public Form1()
         {
             InitializeComponent();
             isDbHandlerInitialized = false;
             isSlxModelInitialized = false;
             this.fields = new FieldInformationManager(this.Log);
+
+            this.cmbNewSize.Text = strKeepCurrent;
         }
 
         private void btnSelModel_Click(object sender, EventArgs e)
@@ -190,6 +193,8 @@ namespace SlxUniAx
             }
 
             // switch tab
+            lblFieldDesc.Text = String.Empty;
+
             this.tabControlUpper.SelectedTab = this.tabFields;
         }
 
@@ -200,6 +205,9 @@ namespace SlxUniAx
         /// <param name="e"></param>
         private void treeFields_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (!chkKeepSize.Checked)
+                cmbNewSize.Text = strKeepCurrent;
+
             lblFieldDesc.Text = String.Empty;
 
             FieldInformation selectedField = e.Node.Tag as FieldInformation;
@@ -233,11 +241,20 @@ namespace SlxUniAx
         /// <param name="newState"></param>
         private void SetUnicodeness(FieldState newState)
         {
+            if (treeFields.SelectedNode == null) return;
+
             FieldInformation selectedField = treeFields.SelectedNode.Tag as FieldInformation;
 
             if (selectedField != null)
             {
                 selectedField.NewState = newState;
+
+                int newSize;
+
+                if (Int32.TryParse(cmbNewSize.Text, out newSize))
+                {
+                    selectedField.NewLength = newSize;
+                }
 
                 treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
                     (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
@@ -255,7 +272,7 @@ namespace SlxUniAx
 
             if (this.ConfirmActions() == DialogResult.Yes)
             {
-                fields.PerformActions();
+                fields.RunActions();
 
                 this.Log("");
                 this.Log("Reloading entity data...");
@@ -292,5 +309,6 @@ namespace SlxUniAx
             var res = MessageBox.Show(sb.ToString(), "Watch out!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
             return res;
         }
+
     }
 }

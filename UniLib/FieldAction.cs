@@ -54,7 +54,9 @@ namespace Gianos.UniLib
                 return String.Empty;
             }
 
-            return TableName + "." + FieldName + " -> " + NewState.ToString() + "(" + NewSize + ")";
+            return (NewSize > 0) ?
+                TableName + "." + FieldName + " -> " + NewState.ToString() + "(" + NewSize + ")" :
+                TableName + "." + FieldName + " -> " + NewState.ToString();
         }
     }
 }

@@ -200,16 +200,24 @@ namespace Gianos.UniLib
                 {
                     var field = table[fieldName];
 
-                    if ((field.NewState != FieldState.Unspecified)
-                        &&
-                        (field.State != field.NewState))
+                    if (
+                            (field.NewState != FieldState.Unspecified)
+                            &&
+                            (
+                                (field.State != field.NewState)
+                                ||
+                                (field.NewLength > 0)
+                            )
+                        )
+
                     {
                         actions.Add(new FieldAction()
                         {
                             TableName = tableName,
                             FieldName = fieldName,
                             NewState = field.NewState,
-                            FieldInfo = field
+                            FieldInfo = field,
+                            NewSize = field.NewLength ?? 0
                         });
                     }
                 }
@@ -221,7 +229,7 @@ namespace Gianos.UniLib
         /// <summary>
         /// Executes the specified actions on the db and on slx model
         /// </summary>
-        public void PerformActions()
+        public void RunActions()
         {
             this.Log("Reading actions to be performed...");
 
