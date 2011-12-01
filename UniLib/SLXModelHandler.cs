@@ -126,6 +126,11 @@ namespace Gianos.UniLib
 
         public void SetUnicodeOnSlxField(FieldInformation field, bool UnicodeEnabled)
         {
+            SetUnicodeOnSlxField(field, UnicodeEnabled, 0);
+        }
+
+        public void SetUnicodeOnSlxField(FieldInformation field, bool UnicodeEnabled, int newSize)
+        {
             try
             {
                 var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
@@ -141,15 +146,28 @@ namespace Gianos.UniLib
 
                 var nav = doc.CreateNavigator();
 
-                var property = nav.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
+                var property = doc.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
+                //var property = nav.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
 
-                var slxLength = property.GetAttribute("maxLength", String.Empty).ToString();
+                //var currentSlxLength = property.GetAttribute("maxLength", String.Empty).ToString();
+                var currentSlxLength = property.Attributes["maxLength"].Value;
+
+                // TBD: Make it work!
+                if (newSize > 0)
+                {
+                    //property.G
+                    property.Attributes["maxLength"].Value = newSize.ToString();
+                    property.Attributes["lastModifiedUtc"].Value = DateTime.UtcNow.ToString("o");
+                    //property.MoveToAttribute("lastModifiedUtc", null);
+                    //property.SetValue(DateTime.UtcNow.ToString("o"));
+                    //property.MoveToParent();
+                }
 
                 var newTypeXML = (UnicodeEnabled ? unicodeTextPropertyXMLModel : textPropertyXMLModel);
 
-                newTypeXML = newTypeXML.Replace("******", slxLength);
+                newTypeXML = newTypeXML.Replace("******", (newSize > 0 ? newSize.ToString() : currentSlxLength));
 
-                property.SelectSingleNode("SystemDataType").OuterXml = newTypeXML;
+                doc.CreateNavigator().SelectSingleNode(String.Format(@"//property[@columnName='{0}']/SystemDataType", field.fieldName)).OuterXml = newTypeXML;
 
                 doc.Save(entityFile.FullName);
             }
@@ -163,7 +181,7 @@ namespace Gianos.UniLib
         {
             foreach (var action in actions)
             {
-                this.SetUnicodeOnSlxField(action.FieldInfo, action.NewState == FieldState.Unicode);
+                this.SetUnicodeOnSlxField(action.FieldInfo, action.NewState == FieldState.Unicode, action.NewSize);
             }
         }
     }
