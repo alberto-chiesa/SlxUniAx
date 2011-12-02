@@ -144,30 +144,23 @@ namespace Gianos.UniLib
                 XmlDocument doc = new XmlDocument();
                 doc.Load(entityFile.FullName);
 
-                var nav = doc.CreateNavigator();
-
                 var property = doc.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
-                //var property = nav.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
-
-                //var currentSlxLength = property.GetAttribute("maxLength", String.Empty).ToString();
+                
                 var currentSlxLength = property.Attributes["maxLength"].Value;
 
-                // TBD: Make it work!
                 if (newSize > 0)
                 {
-                    //property.G
                     property.Attributes["maxLength"].Value = newSize.ToString();
                     property.Attributes["lastModifiedUtc"].Value = DateTime.UtcNow.ToString("o");
-                    //property.MoveToAttribute("lastModifiedUtc", null);
-                    //property.SetValue(DateTime.UtcNow.ToString("o"));
-                    //property.MoveToParent();
                 }
 
                 var newTypeXML = (UnicodeEnabled ? unicodeTextPropertyXMLModel : textPropertyXMLModel);
 
                 newTypeXML = newTypeXML.Replace("******", (newSize > 0 ? newSize.ToString() : currentSlxLength));
 
-                doc.CreateNavigator().SelectSingleNode(String.Format(@"//property[@columnName='{0}']/SystemDataType", field.fieldName)).OuterXml = newTypeXML;
+                string xpathSelector = String.Format(@"//property[@columnName='{0}']/SystemDataType", field.fieldName); 
+                
+                doc.CreateNavigator().SelectSingleNode(xpathSelector).OuterXml = newTypeXML;
 
                 doc.Save(entityFile.FullName);
             }

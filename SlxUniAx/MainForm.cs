@@ -22,10 +22,8 @@ namespace SlxUniAx
 
     public partial class Form1 : Form
     {
-        private DbHandler dbHandler;
         private bool isDbHandlerInitialized;
 
-        //private SLXModelHandler slxModelHandler;
         private bool isSlxModelInitialized;
 
         private FieldInformationManager fields;
@@ -67,6 +65,7 @@ namespace SlxUniAx
 
         private void btnTestDb_Click(object sender, EventArgs e)
         {
+            DbHandler dbHandler;
             this.CleanLog();
 
             try
@@ -291,23 +290,18 @@ namespace SlxUniAx
         private DialogResult ConfirmActions()
         {
             FieldAction[] actions = fields.GetActions();
-
             var sb = new StringBuilder();
-
             sb.AppendLine("Fields to be updated:");
             
             for (int i = 0; i < Math.Min(10, actions.Length); i++)
-            {
                 sb.AppendLine(actions[i].ToString());
-            }
 
             if (actions.Length > 10)
                 sb.AppendLine((actions.Length - 10).ToString() + " more actions to be performed.");
 
             sb.AppendLine("Are you sure you want to continue?");
 
-            var res = MessageBox.Show(sb.ToString(), "Watch out!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-            return res;
+            return MessageBox.Show(sb.ToString(), "Watch out!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
         }
 
     }
