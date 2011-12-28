@@ -100,7 +100,10 @@ namespace SlxUniAx
             try
             {
                 this.Log("Performing Model Test...");
-                slxModelHandler = new SLXModelHandler(this.txtFolderModel.Text);
+
+                slxModelHandler = (this.chkUseVFS.Checked) ?
+                    new SLXModelHandler(txtServer.Text, txtDatabase.Text, txtUser.Text, txtPassword.Text) :
+                    new SLXModelHandler(this.txtFolderModel.Text);
             }
             catch (Exception exc)
             {
@@ -302,6 +305,13 @@ namespace SlxUniAx
             sb.AppendLine("Are you sure you want to continue?");
 
             return MessageBox.Show(sb.ToString(), "Watch out!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+        }
+
+        private void chkUseVFS_CheckedChanged(object sender, EventArgs e)
+        {
+            txtFolderModel.Enabled = !(chkUseVFS.Checked);
+            btnSelModel.Enabled = !(chkUseVFS.Checked);
+            this.Refresh();
         }
 
     }

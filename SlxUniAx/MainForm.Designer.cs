@@ -65,6 +65,7 @@
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.modelBrowser = new System.Windows.Forms.FolderBrowserDialog();
+            this.chkUseVFS = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -205,6 +206,7 @@
             this.tableLayoutPanel1.Controls.Add(this.btnSelModel, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.txtFolderModel, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.btnTestModel, 1, 6);
+            this.tableLayoutPanel1.Controls.Add(this.chkUseVFS, 0, 6);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.MinimumSize = new System.Drawing.Size(0, 270);
@@ -534,6 +536,20 @@
             this.textBox1.Size = new System.Drawing.Size(567, 80);
             this.textBox1.TabIndex = 0;
             // 
+            // chkUseVFS
+            // 
+            this.chkUseVFS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkUseVFS.AutoSize = true;
+            this.chkUseVFS.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkUseVFS.Location = new System.Drawing.Point(3, 186);
+            this.chkUseVFS.Name = "chkUseVFS";
+            this.chkUseVFS.Size = new System.Drawing.Size(144, 17);
+            this.chkUseVFS.TabIndex = 13;
+            this.chkUseVFS.Text = "Use VFS";
+            this.chkUseVFS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkUseVFS.UseVisualStyleBackColor = true;
+            this.chkUseVFS.CheckedChanged += new System.EventHandler(this.chkUseVFS_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -593,6 +609,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox cmbNewSize;
         private System.Windows.Forms.CheckBox chkKeepSize;
+        private System.Windows.Forms.CheckBox chkUseVFS;
     }
 }
 
