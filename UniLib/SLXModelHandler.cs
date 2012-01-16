@@ -315,7 +315,37 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
 
         private void SaveXmlDocumentToVFS(FieldInformation field, XmlDocument doc)
         {
-            throw new NotImplementedException();
+            bool isCompressed = false;
+
+            MemoryStream ms = new MemoryStream();
+            doc.Save(ms);
+            ms.Flush();
+            ms.Position = 0;
+            byte[] binaryData = Utils.PackItemData(ms, true, ref isCompressed);
+
+            OpenDbConnection();
+            var cmd = dbConnection.CreateCommand();
+            cmd.CommandText =
+@"UPDATE VIRTUALFILESYSTEM
+SET ITEMDATA = @dataPar,
+    ISCOMPRESSED = @isCompressedPar,
+    MODIFYUSER = 'ADMIN',
+    MODIFYDATE = GETDATE()
+WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.tableName + ".entity.xml';";
+
+            cmd.CommandType = System.Data.CommandType.Text;
+
+            cmd.Parameters
+                .Add("@dataPar", System.Data.SqlDbType.Image)
+                .Value = binaryData;
+            
+            cmd.Parameters
+                .Add("@isCompressedPar", System.Data.SqlDbType.Char)
+                .Value = isCompressed ? "T" : "F";
+
+            cmd.ExecuteNonQuery();
+
+            CloseConnection();
         }
 
         private XmlDocument OpenXmlDocumentFromVFS(FieldInformation field)

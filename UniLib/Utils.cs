@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.IO.Compression;
 
 namespace Gianos.UniLib
 {
@@ -38,6 +39,40 @@ namespace Gianos.UniLib
                 }
             }
             return stream;
+        }
+
+        /// <summary>
+        /// Copied and Pasted from Sage.Platform.VirtualFileSystem.VFSQuery
+        /// </summary>
+        /// <param name="itemData">Data to pack</param>
+        /// <param name="smart">Smart compresses</param>
+        /// <param name="compressed"></param>
+        /// <returns></returns>
+        internal static byte[] PackItemData(MemoryStream itemData, bool smart, ref bool compressed)
+        {
+            if (itemData == null)
+            {
+                return null;
+            }
+            byte[] buffer = itemData.ToArray();
+            if (smart || compressed)
+            {
+                byte[] buffer2;
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    using (DeflateStream stream2 = new DeflateStream(stream, CompressionMode.Compress))
+                    {
+                        stream2.Write(buffer, 0, buffer.Length);
+                    }
+                    buffer2 = stream.ToArray();
+                }
+                compressed = !smart || (buffer2.Length < buffer.Length);
+                if (compressed)
+                {
+                    return buffer2;
+                }
+            }
+            return buffer;
         }
     }
 }
