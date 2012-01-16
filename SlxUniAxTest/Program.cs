@@ -14,6 +14,20 @@ namespace Gianos.SlxUniAxTest
             //var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sysdba", "masterkey");
             //var fields = dbHandler.ReadTableDataFromSLXDb();
 
+            string testActions = @"
+# This is a comment
+ACCOUNT.accountname->Unicode(100)
+
+Contact.FirstName->ansi(200)
+# contact.lastname->UnIcode
+  contact   . prefix
+->  unicode
+
+account.    accountmanagerid -> ansi(1)";
+            var actions = FieldAction.Parse(testActions);
+
+
+            return;
             var model = new SLXModelHandler(@"C:\Users\ACA.GIANOS\Documents\Dev\bvweb\Model");
             var fields = model.FindEntityModels();
             var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sysdba", "masterkey");
