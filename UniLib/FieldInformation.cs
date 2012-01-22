@@ -163,5 +163,18 @@ namespace Gianos.UniLib
                 sqlType,
                 sqlLength);
         }
+
+        /// <summary>
+        /// A Text field is a string for both sql and slx.
+        /// </summary>
+        public bool IsATextField
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(this.slxType)
+                    &&
+                    !String.IsNullOrEmpty(this.sqlType);
+            }
+        }
     }
 }

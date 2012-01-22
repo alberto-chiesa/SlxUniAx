@@ -116,32 +116,19 @@ namespace Gianos.UniLib
             }
         }
 
-        public String[] GetTablesList()
+        /// <summary>
+        /// Returns a list of all the tables/entities in the system
+        /// with text fields (strings in the entity, varchar/nvarchar in sql)
+        /// </summary>
+        /// <returns>Iterator of the tables</returns>
+        public IEnumerable<String> GetTablesList()
         {
-            List<String> tablesList = new List<string>();
+            // table.Value is dictionary of fields
+            var ret = from table in this.tables
+                      where table.Value.Any(field => field.Value.IsATextField)
+                      select table.Key;
 
-            foreach (string tableName in this.tables.Keys)
-            {
-                var t = this.tables[tableName];
-
-                foreach (var fieldName in t.Keys)
-                {
-                    // I need at least a field which is on the db as varchar or nvarchar AND
-                    // which is a Text or UnicodeText in the model
-                    // I do this check watching to slxType and sqlType
-                    if (
-                            (!String.IsNullOrEmpty(t[fieldName].slxType))
-                            &&
-                            (!String.IsNullOrEmpty(t[fieldName].sqlType))
-                        )
-                    {
-                        tablesList.Add(tableName);
-                        break;
-                    }
-                }
-            }
-
-            return tablesList.ToArray();
+            return ret;
         }
 
         /// <summary>
@@ -165,26 +152,16 @@ namespace Gianos.UniLib
             fieldName = fieldName.ToUpper();
 
             // Check for table existence
-            if (tables.ContainsKey(tableName.ToUpper()))
-            {
-                fields = tables[tableName];
-            }
-            else
-            {
-                fields = new Dictionary<string, FieldInformation>();
-                tables[tableName] = fields;
-            }
+            if (!tables.ContainsKey(tableName))
+                tables[tableName] = new Dictionary<string, FieldInformation>();
 
+            fields = tables[tableName];
+            
             // Check for field existence
-            if (fields.ContainsKey(fieldName))
-            {
-                field = fields[fieldName];
-            }
-            else
-            {
-                field = new FieldInformation(tableName, fieldName);
-                fields[fieldName] = field;
-            }
+            if (!fields.ContainsKey(fieldName))
+                fields[fieldName] = new FieldInformation(tableName, fieldName);
+
+            field = fields[fieldName];
 
             return field;
         }
