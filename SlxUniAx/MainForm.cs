@@ -155,9 +155,7 @@ namespace SlxUniAx
         {
             treeFields.Nodes.Clear();
 
-            string[] tables = fields.GetTablesList();
-
-            foreach(string tableName in tables)
+            foreach (string tableName in fields.GetTablesList())
             {
                 var tableNode = treeFields.Nodes.Add(tableName);
                 tableNode.ImageIndex = (int)StatusIcons.Table;

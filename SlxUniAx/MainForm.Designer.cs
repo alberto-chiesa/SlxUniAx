@@ -49,6 +49,7 @@
             this.btnSelModel = new System.Windows.Forms.Button();
             this.txtFolderModel = new System.Windows.Forms.TextBox();
             this.btnTestModel = new System.Windows.Forms.Button();
+            this.chkUseVFS = new System.Windows.Forms.CheckBox();
             this.tabFields = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btnDoDamage = new System.Windows.Forms.Button();
@@ -65,7 +66,6 @@
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.modelBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            this.chkUseVFS = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -283,7 +283,7 @@
             this.btnLoad.MinimumSize = new System.Drawing.Size(0, 40);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(561, 40);
-            this.btnLoad.TabIndex = 12;
+            this.btnLoad.TabIndex = 9;
             this.btnLoad.Text = "Load Field Data!";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
@@ -294,7 +294,7 @@
             this.btnSelModel.Location = new System.Drawing.Point(3, 153);
             this.btnSelModel.Name = "btnSelModel";
             this.btnSelModel.Size = new System.Drawing.Size(144, 23);
-            this.btnSelModel.TabIndex = 9;
+            this.btnSelModel.TabIndex = 5;
             this.btnSelModel.Text = "Select Model Folder";
             this.btnSelModel.UseVisualStyleBackColor = true;
             this.btnSelModel.Click += new System.EventHandler(this.btnSelModel_Click);
@@ -305,7 +305,7 @@
             this.txtFolderModel.Location = new System.Drawing.Point(153, 155);
             this.txtFolderModel.Name = "txtFolderModel";
             this.txtFolderModel.Size = new System.Drawing.Size(411, 20);
-            this.txtFolderModel.TabIndex = 10;
+            this.txtFolderModel.TabIndex = 6;
             this.txtFolderModel.Text = "C:\\SlxWeb\\Model";
             // 
             // btnTestModel
@@ -314,10 +314,24 @@
             this.btnTestModel.Location = new System.Drawing.Point(153, 183);
             this.btnTestModel.Name = "btnTestModel";
             this.btnTestModel.Size = new System.Drawing.Size(411, 23);
-            this.btnTestModel.TabIndex = 11;
-            this.btnTestModel.Text = "Test Model Folder";
+            this.btnTestModel.TabIndex = 8;
+            this.btnTestModel.Text = "Test Model";
             this.btnTestModel.UseVisualStyleBackColor = true;
             this.btnTestModel.Click += new System.EventHandler(this.btnTestModel_Click);
+            // 
+            // chkUseVFS
+            // 
+            this.chkUseVFS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkUseVFS.AutoSize = true;
+            this.chkUseVFS.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkUseVFS.Location = new System.Drawing.Point(3, 186);
+            this.chkUseVFS.Name = "chkUseVFS";
+            this.chkUseVFS.Size = new System.Drawing.Size(144, 17);
+            this.chkUseVFS.TabIndex = 7;
+            this.chkUseVFS.Text = "Use VFS";
+            this.chkUseVFS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chkUseVFS.UseVisualStyleBackColor = true;
+            this.chkUseVFS.CheckedChanged += new System.EventHandler(this.chkUseVFS_CheckedChanged);
             // 
             // tabFields
             // 
@@ -535,20 +549,6 @@
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(567, 80);
             this.textBox1.TabIndex = 0;
-            // 
-            // chkUseVFS
-            // 
-            this.chkUseVFS.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkUseVFS.AutoSize = true;
-            this.chkUseVFS.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkUseVFS.Location = new System.Drawing.Point(3, 186);
-            this.chkUseVFS.Name = "chkUseVFS";
-            this.chkUseVFS.Size = new System.Drawing.Size(144, 17);
-            this.chkUseVFS.TabIndex = 13;
-            this.chkUseVFS.Text = "Use VFS";
-            this.chkUseVFS.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkUseVFS.UseVisualStyleBackColor = true;
-            this.chkUseVFS.CheckedChanged += new System.EventHandler(this.chkUseVFS_CheckedChanged);
             // 
             // Form1
             // 
