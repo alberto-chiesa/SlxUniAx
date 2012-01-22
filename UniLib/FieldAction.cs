@@ -45,7 +45,7 @@ namespace Gianos.UniLib
         }
 
         /// <summary>
-        /// To string method.
+        /// ToString method.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -55,32 +55,18 @@ namespace Gianos.UniLib
                 return String.Empty;
             }
 
-            return (NewSize > 0) ?
-                TableName + "." + FieldName + " -> " + NewState.ToString() + "(" + NewSize + ")" :
-                TableName + "." + FieldName + " -> " + NewState.ToString();
+            return String.Format((NewSize > 0) ? "{0}.{1} -> {2}({3})" : "{0}.{1} -> {2}",
+                TableName, FieldName, NewState.ToString(), NewSize);
         }
 
-//        static private Regex _SplitLines = new Regex(@"
-//(#[^\r\n]*[\r\n]+)*                                    # ignore comment lines
-//(?<Line>.)",
-//            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
-//        static private Regex _ParseLine = new Regex(
-//@"(#[^\r\n]*[\r\n]+)*\s*                               # ignore comment lines starting from #
-//(?<TableName>[a-zA-Z0-9_]+)                            # the table name
-//\s*\.\s*                                               # the dot between table and field name and ignores whitespace
-//(?<FieldName>[a-zA-Z0-9_]+)                            # the field name
-//\s*->\s*                                               # the arrow sign
-//(?<NewState>(Unicode)|(Ansi))\s*                       # Unicode or Ansi
-//(\(\s*(?<NewSize>[0-9]+)\)\s*)?                        # the new size",
-
         static private Regex _ParseLine = new Regex(
-            @"(\#[^\r\n]*[\r\n]+)*\s*          # ignore comment lines starting from #
-            (?<TableName>[a-zA-Z0-9_]+)        # the table name
+            @"(\#[^\r\n]*[\r\n]+)*\s*          # ignore comment lines starting from # and ending with newline
+            (?<TableName>[a-zA-Z0-9_]+)        # matches table name
             \s*\.\s*                           # the dot between table and field name and ignores whitespace
-            (?<FieldName>[a-zA-Z0-9_]+)        # the field name
+            (?<FieldName>[a-zA-Z0-9_]+)        # matches the field name
             \s*->\s*                           # the arrow sign
-            (?<NewState>(Unicode)|(Ansi))\s*   # Unicode or Ansi
-            (\(\s*(?<NewSize>[0-9]+)\)\s*)?    # the new size",
+            (?<NewState>(Unicode)|(Ansi))\s*   # Matches state: Unicode or Ansi
+            (\(\s*(?<NewSize>[0-9]+)\)\s*)?    # the new size, if present",
             RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
         
         /// <summary>
