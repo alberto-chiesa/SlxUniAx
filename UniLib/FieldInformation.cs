@@ -176,5 +176,19 @@ namespace Gianos.UniLib
                     !String.IsNullOrEmpty(this.sqlType);
             }
         }
+
+        /// <summary>
+        /// Returns true if a New State has been specified
+        /// or if the field should be resized
+        /// </summary>
+        public bool MustPerformAction
+        {
+            get
+            {
+                return (NewState != FieldState.Unspecified)
+                    &&
+                    ((State != NewState) || (NewLength > 0));
+            }
+        }
     }
 }

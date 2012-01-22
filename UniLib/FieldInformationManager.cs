@@ -168,39 +168,26 @@ namespace Gianos.UniLib
 
         public FieldAction[] GetActions()
         {
-            var actions = new List<FieldAction>();
-            foreach(var tableName in this.tables.Keys)
-            {
-                var table = tables[tableName];
+            return EnumerateActions().ToArray<FieldAction>();
+        }
 
-                foreach (var fieldName in table.Keys)
-                {
-                    var field = table[fieldName];
-
-                    if (
-                            (field.NewState != FieldState.Unspecified)
-                            &&
-                            (
-                                (field.State != field.NewState)
-                                ||
-                                (field.NewLength > 0)
-                            )
-                        )
-
-                    {
-                        actions.Add(new FieldAction()
-                        {
-                            TableName = tableName,
-                            FieldName = fieldName,
-                            NewState = field.NewState,
-                            FieldInfo = field,
-                            NewSize = field.NewLength ?? 0
-                        });
-                    }
-                }
-            }
-
-            return actions.ToArray();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<FieldAction> EnumerateActions()
+        {
+            return from table in this.tables
+                  from field in table.Value
+                  where field.Value.MustPerformAction
+                  select new FieldAction()
+                  {
+                      TableName = table.Key,
+                      FieldName = field.Key,
+                      NewState = field.Value.NewState,
+                      FieldInfo = field.Value,
+                      NewSize = field.Value.NewLength ?? 0
+                  };
         }
 
         /// <summary>
