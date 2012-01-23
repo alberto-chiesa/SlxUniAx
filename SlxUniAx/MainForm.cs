@@ -164,28 +164,23 @@ namespace SlxUniAx
                 var tableFields = fields[tableName];
                 foreach (var fieldName in tableFields.Keys)
                 {
+                    var field = tableFields[fieldName];
                     // Skipping fields with no slx Text type or no Sql type
                     // Could leverage some special error?
-                    if (String.IsNullOrEmpty(tableFields[fieldName].sqlType)
-                        ||
-                        String.IsNullOrEmpty(tableFields[fieldName].slxType))
-                        continue;
+                    if (!field.IsATextField) continue;
 
                     var fieldNode = tableNode.Nodes.Add(fieldName);
 
                     // link the node to the corresponding FieldInformation object
-                    fieldNode.Tag = tableFields[fieldName];
+                    fieldNode.Tag = field;
 
-                    StatusIcons nodeIcon =
-                        tableFields[fieldName].State == FieldState.Ansi ? StatusIcons.Text :
-                        tableFields[fieldName].State == FieldState.Unicode ? StatusIcons.Unicode :
-                        StatusIcons.Error;
+                    StatusIcons nodeIconIndex = GetIconIndexForField(field);
 
-                    fieldNode.SelectedImageIndex = fieldNode.ImageIndex = (int)nodeIcon;
+                    fieldNode.SelectedImageIndex = fieldNode.ImageIndex = (int)nodeIconIndex;
 
                     // error condition propagates to table node
-                    if (nodeIcon == StatusIcons.Error)
-                        tableNode.SelectedImageIndex = tableNode.ImageIndex = (int)nodeIcon;
+                    if (nodeIconIndex == StatusIcons.Error)
+                        tableNode.SelectedImageIndex = tableNode.ImageIndex = (int)nodeIconIndex;
                 }
 
                 // collapse all table nodes
@@ -196,6 +191,21 @@ namespace SlxUniAx
             lblFieldDesc.Text = String.Empty;
 
             this.tabControlUpper.SelectedTab = this.tabFields;
+        }
+
+        /// <summary>
+        /// Gets the icon index to show for each field
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private static StatusIcons GetIconIndexForField(FieldInformation field)
+        {
+            if (field.State == FieldState.Ansi)
+                return StatusIcons.Text;
+            if (field.State == FieldState.Unicode)
+                return StatusIcons.Unicode;
+            
+            return StatusIcons.Error;
         }
 
         /// <summary>
@@ -290,7 +300,7 @@ namespace SlxUniAx
         /// <returns></returns>
         private DialogResult ConfirmActions()
         {
-            FieldAction[] actions = fields.GetActions();
+            FieldAction[] actions = fields.GetActionArray();
             var sb = new StringBuilder();
             sb.AppendLine("Fields to be updated:");
             
@@ -305,10 +315,15 @@ namespace SlxUniAx
             return MessageBox.Show(sb.ToString(), "Watch out!", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
         }
 
+        /// <summary>
+        /// If using VFS, disable model folder button and text box
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void chkUseVFS_CheckedChanged(object sender, EventArgs e)
         {
-            txtFolderModel.Enabled = !(chkUseVFS.Checked);
-            btnSelModel.Enabled = !(chkUseVFS.Checked);
+            btnSelModel.Enabled = txtFolderModel.Enabled = !chkUseVFS.Checked;
+            
             this.Refresh();
         }
 

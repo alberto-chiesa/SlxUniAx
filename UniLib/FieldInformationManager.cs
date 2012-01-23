@@ -124,11 +124,9 @@ namespace Gianos.UniLib
         public IEnumerable<String> GetTablesList()
         {
             // table.Value is dictionary of fields
-            var ret = from table in this.tables
-                      where table.Value.Any(field => field.Value.IsATextField)
-                      select table.Key;
-
-            return ret;
+            return from table in this.tables
+                   where table.Value.Any(field => field.Value.IsATextField)
+                   select table.Key;
         }
 
         /// <summary>
@@ -166,28 +164,33 @@ namespace Gianos.UniLib
             return field;
         }
 
-        public FieldAction[] GetActions()
+        /// <summary>
+        /// Get a list of actions from the field data.
+        /// </summary>
+        /// <returns></returns>
+        public FieldAction[] GetActionArray()
         {
             return EnumerateActions().ToArray<FieldAction>();
         }
 
         /// <summary>
-        /// 
+        /// Build a list of FieldAction(s) based on the
+        /// field informations available
         /// </summary>
         /// <returns></returns>
         private IEnumerable<FieldAction> EnumerateActions()
         {
             return from table in this.tables
-                  from field in table.Value
-                  where field.Value.MustPerformAction
-                  select new FieldAction()
-                  {
-                      TableName = table.Key,
-                      FieldName = field.Key,
-                      NewState = field.Value.NewState,
-                      FieldInfo = field.Value,
-                      NewSize = field.Value.NewLength ?? 0
-                  };
+                   from field in table.Value
+                   where field.Value.MustPerformAction
+                   select new FieldAction()
+                   {
+                       TableName = table.Key,
+                       FieldName = field.Key,
+                       NewState = field.Value.NewState,
+                       FieldInfo = field.Value,
+                       NewSize = field.Value.NewLength ?? 0
+                   };
         }
 
         /// <summary>
@@ -197,7 +200,7 @@ namespace Gianos.UniLib
         {
             this.Log("Reading actions to be performed...");
 
-            var actions = GetActions();
+            var actions = GetActionArray();
 
             this.Log(actions.Length + " found.");
 
@@ -210,5 +213,57 @@ namespace Gianos.UniLib
             this.Log("");
             this.Log("Update Complete!");
         }
+
+        /// <summary>
+        /// Builds a bundle reading the actions from the
+        /// field data.
+        /// A bundle is simply a list of action rows, each
+        /// representing the ToString() of an action
+        /// </summary>
+        /// <returns>The bundle text</returns>
+        public string GetBundleText()
+        {
+            var sb = new StringBuilder();
+
+            var actionsText = from act in this.EnumerateActions()
+                              let toString = act.ToString()
+                              orderby toString
+                              select toString;
+
+            foreach (string actionText in actionsText)
+                sb.AppendLine(actionText);
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Given a list of actions, applies them to the field data.
+        /// Throws exceptions if inexistent fields are specified
+        /// </summary>
+        /// <param name="actions">Enumerable set of actions</param>
+        public void ApplyBundleToFieldInformation(IEnumerable<FieldAction> actions)
+        {
+            foreach (var action in actions)
+            {
+                if (!this.tables.ContainsKey(action.TableName))
+                    throw new ArgumentException(String.Format(
+                        "Error loading bundle: {0} is not a valid table name.", action.TableName));
+
+                var table = this.tables[action.TableName];
+                if (!table.ContainsKey(action.FieldName))
+                    throw new ArgumentException(String.Format(
+                        "Error loading bundle: {0} is not a valid field name for table {1}.", action.FieldName, action.TableName));
+
+                var field = table[action.FieldName];
+
+                if (field.NewState != action.NewState || action.NewSize > 0)
+                {
+                    field.NewState = action.NewState;
+                    if (action.NewSize > 0) field.NewLength = action.NewSize;
+                }
+            }
+        }
+
+
     }
 }

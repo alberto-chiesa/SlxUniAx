@@ -171,9 +171,7 @@ namespace Gianos.UniLib
         {
             get
             {
-                return !String.IsNullOrEmpty(this.slxType)
-                    &&
-                    !String.IsNullOrEmpty(this.sqlType);
+                return !(String.IsNullOrEmpty(this.slxType) || String.IsNullOrEmpty(this.sqlType));
             }
         }
 
