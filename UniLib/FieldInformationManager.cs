@@ -225,13 +225,33 @@ namespace Gianos.UniLib
         {
             var sb = new StringBuilder();
 
-            var actionsText = from act in this.EnumerateActions()
-                              let toString = act.ToString()
-                              orderby toString
-                              select toString;
+            //var actionsText = from act in this.EnumerateActions()
+            //                  let toString = act.ToString()
+            //                  orderby toString
+            //                  select toString;
 
-            foreach (string actionText in actionsText)
-                sb.AppendLine(actionText);
+            //foreach (string actionText in actionsText)
+            //    sb.AppendLine(actionText);
+
+            var actions = from act in this.EnumerateActions()
+                          group act by act.TableName into tableActions
+                          orderby tableActions.Key
+                          select new {
+                              TableName = tableActions.Key,
+                              FieldActions = tableActions
+                                    .OrderBy(x => x.ToString())
+                                    .Select(x => x.ToString())
+                          };
+
+            //foreach(var tableName in actions.
+            foreach (var aTable in actions)
+            {
+                sb.AppendLine(String.Format("# Actions for {0} table", aTable.TableName));
+                
+                foreach (var act in aTable.FieldActions) sb.AppendLine(act);
+                
+                sb.AppendLine();
+            }
 
             return sb.ToString();
         }
@@ -263,7 +283,6 @@ namespace Gianos.UniLib
                 }
             }
         }
-
 
     }
 }
