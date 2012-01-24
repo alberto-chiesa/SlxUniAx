@@ -327,5 +327,15 @@ namespace SlxUniAx
             this.Refresh();
         }
 
+        private void btnRefreshBundle_Click(object sender, EventArgs e)
+        {
+            this.LoadBundleText();
+        }
+
+        private void LoadBundleText()
+        {
+            this.txtBundleText.Text = this.fields.GetBundleText();
+        }
+
     }
 }
