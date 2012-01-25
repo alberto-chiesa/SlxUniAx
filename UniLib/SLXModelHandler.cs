@@ -22,21 +22,10 @@ namespace Gianos.UniLib
 <Length>******</Length>
 </UnicodeTextDataType>
 </SystemDataType>";
-
-        public string modelPath { get; private set; }
-        private DirectoryInfo modelDir;
 		
 		private bool usingVFS {get; set; }
 
-        /// <summary>
-        /// Connection String property
-        /// </summary>
-        public string dbConnectionString { get; set; }
-        private System.Data.SqlClient.SqlConnection dbConnection;
-
-		private string _serverName;
-        private string _databaseName;
-        private Microsoft.SqlServer.Management.Common.ServerConnection _serverConnection;
+        private IModelPersister ModelPersister { get; set; }
         
         /// <summary>
         /// Helper constructor with connection string builder
@@ -48,142 +37,13 @@ namespace Gianos.UniLib
         public SLXModelHandler(string serverName, string databaseName, string userName, string password)
         {
 			usingVFS = true;
-            _serverName = serverName;
-            _databaseName = databaseName;
-            _serverConnection = new Microsoft.SqlServer.Management.Common.ServerConnection(
-                serverName,
-                userName,
-                password
-            );
-
-            var connStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-            connStringBuilder.DataSource = serverName;
-            connStringBuilder.InitialCatalog = databaseName;
-            connStringBuilder.UserID = userName;
-            connStringBuilder.Password = password;
-
-            OpenDbConnection(connStringBuilder.ToString());
+            this.ModelPersister = new VFSModelPersister(serverName, databaseName, userName, password);
         }
 
-        /// <summary>
-        /// Opens up the Connection to the database to access VFS
-        /// </summary>
-        /// <param name="_dbConnectionString">The Connection String</param>
-        private void OpenDbConnection(string _dbConnectionString)
-        {
-            dbConnectionString = _dbConnectionString;
-            
-            OpenDbConnection();
-        }
-		
-        /// <summary>
-        /// Opens up a connection to the database using the cached connection string
-        /// </summary>
-        private void OpenDbConnection()
-        {
-            dbConnection = new System.Data.SqlClient.SqlConnection(this.dbConnectionString);
-
-            try
-            {
-                dbConnection.Open();
-            }
-            catch (System.Data.SqlClient.SqlException e)
-            {
-                throw new System.Exception("There was an error initializing database connection:\r\n" + e.Message, e);
-            }
-        }
-
-        public SLXModelHandler(string modelPath)
+		public SLXModelHandler(string modelPath)
         {
 			usingVFS = false;
-			
-            this.modelPath = modelPath;
-            this.modelDir = new System.IO.DirectoryInfo(modelPath);
-            if (!modelDir.Exists)
-                throw new Exception(String.Format("The model path {0} was not found!", modelPath));
-
-            try
-            {
-                var entityModelFolder = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            }
-            catch (Exception e)
-            {
-                throw new Exception("The Entity Model folder was not found inside the provided model folder!", e);
-            }
-        }
-
-        /// <summary>
-        /// Enumerates through Model dir to collect an XPathDocument
-        /// for each entity xml file
-        /// </summary>
-        /// <returns></returns>
-        public System.Collections.Generic.IEnumerable<XPathDocument> GetModelFilesFromFS()
-        {
-            var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            var entityFiles = entityModelDir.GetFiles("*.entity.xml", System.IO.SearchOption.AllDirectories);
-
-            foreach (var entityFile in entityFiles)
-            {
-                var fileReader = entityFile.OpenText();
-                var entityXml = new XPathDocument(fileReader);
-                fileReader.Close();
-
-                yield return entityXml;
-            }
-
-            yield break;
-        }
-
-        /// <summary>
-        /// Enumerates through VFS records to get an XPathDocument
-        /// for each entity xml row
-        /// </summary>
-        /// <returns></returns>
-        public System.Collections.Generic.IEnumerable<XPathDocument> GetModelFilesFromVFS()
-        {
-            OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"SELECT ITEMDATA, ISCOMPRESSED
-FROM VIRTUALFILESYSTEM
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
-
-            // read the field information from the db
-            var recSet = cmd.ExecuteReader();
-
-            if (!recSet.HasRows)
-                throw new Exception("No field information found in the db. Check your configuration!");
-
-            // read sql info for each field
-            while (recSet.Read())
-            {
-                var ms = Utils.UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
-                string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
-                ms.Close();
-                yield return new XPathDocument(new System.IO.StringReader(xmlString));
-            }
-
-            recSet.Close();
-            CloseConnection();
-
-            //throw new Exception("Some error occurred retrieving field information from the db! Aborting.");
-
-            yield break;
-        }
-
-        /// <summary>
-        /// Closes the private database connection
-        /// </summary>
-        private void CloseConnection()
-        {
-            if (dbConnection != null && dbConnection.State != System.Data.ConnectionState.Closed)
-            {
-                dbConnection.Close();
-            }
-
-            dbConnection = null;
+            this.ModelPersister = new FSModelPersister(modelPath);
         }
 
         /// <summary>
@@ -229,9 +89,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
              */
             try
             {
-                var entityXMLs = (this.usingVFS ? GetModelFilesFromVFS() : GetModelFilesFromFS());
-                
-                foreach (XPathDocument entityXml in entityXMLs)
+                foreach (XPathDocument entityXml in ModelPersister.GetEntityFiles())
                 {
                     var nav = entityXml.CreateNavigator();
 
@@ -281,7 +139,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
         {
             try
             {
-                XmlDocument doc = this.usingVFS ? OpenXmlDocumentFromVFS(field) : OpenXmlDocumentFromFS(field);
+                XmlDocument doc = this.ModelPersister.OpenEntityFileForField(field);
 
                 var property = doc.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
                 
@@ -302,124 +160,12 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
                 
                 doc.CreateNavigator().SelectSingleNode(xpathSelector).OuterXml = newTypeXML;
 
-                if (this.usingVFS)
-                    SaveXmlDocumentToVFS(field, doc);
-                else
-                    SaveXmlDocumentToFS(field, doc);
+                this.ModelPersister.SaveEntityFileForField(field, doc);
             }
             catch (Exception e)
             {
                 throw e;// new Exception("Error reading entity model files!");
             }
-        }
-
-        private void SaveXmlDocumentToVFS(FieldInformation field, XmlDocument doc)
-        {
-            bool isCompressed = false;
-
-            MemoryStream ms = new MemoryStream();
-            doc.Save(ms);
-            ms.Flush();
-            ms.Position = 0;
-            byte[] binaryData = Utils.PackItemData(ms, true, ref isCompressed);
-
-            OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"UPDATE VIRTUALFILESYSTEM
-SET ITEMDATA = @dataPar,
-    ISCOMPRESSED = @isCompressedPar,
-    MODIFYUSER = 'ADMIN',
-    MODIFYDATE = GETDATE()
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.tableName + ".entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
-
-            cmd.Parameters
-                .Add("@dataPar", System.Data.SqlDbType.Image)
-                .Value = binaryData;
-            
-            cmd.Parameters
-                .Add("@isCompressedPar", System.Data.SqlDbType.Char)
-                .Value = isCompressed ? "T" : "F";
-
-            cmd.ExecuteNonQuery();
-
-            CloseConnection();
-        }
-
-        private XmlDocument OpenXmlDocumentFromVFS(FieldInformation field)
-        {
-            OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"SELECT ITEMDATA, ISCOMPRESSED
-FROM VIRTUALFILESYSTEM
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.tableName + ".entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
-
-            // read the field information from the db
-            var recSet = cmd.ExecuteReader();
-
-            if (!recSet.HasRows)
-                throw new Exception("No field information found in the db. Check your configuration!");
-
-            // read sql info for each field
-            if (!recSet.Read()) return null;
-
-            var ms = Utils.UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
-            string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
-            ms.Close();
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(new System.IO.StringReader(xmlString));
-
-            recSet.Close();
-            CloseConnection();
-            
-            return doc;
-        }
-
-        /// <summary>
-        /// Saves the updated entity xml to the FS
-        /// </summary>
-        /// <param name="field"></param>
-        /// <param name="doc"></param>
-        private void SaveXmlDocumentToFS(FieldInformation field, XmlDocument doc)
-        {
-            var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            var entityFiles = entityModelDir.GetFiles("*." + field.tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
-
-            if (entityFiles.Length != 1)
-                throw new Exception("Zero or more than 1 file found for entity " + field.tableName + "! Aborting.");
-
-            var entityFile = entityFiles[0];
-
-            doc.Save(entityFile.FullName);
-        }
-
-        /// <summary>
-        /// Loads an entity XML from FS
-        /// </summary>
-        /// <param name="field">Field Data</param>
-        /// <returns></returns>
-        private XmlDocument OpenXmlDocumentFromFS(FieldInformation field)
-        {
-            var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            var entityFiles = entityModelDir.GetFiles("*." + field.tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
-
-            if (entityFiles.Length != 1)
-                throw new Exception("Zero or more than 1 file found for entity " + field.tableName + "! Aborting.");
-
-            var entityFile = entityFiles[0];
-
-            var tr = new System.IO.FileStream(entityFile.FullName, FileMode.Open);
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(entityFile.FullName);
-
-            return doc;
         }
 
         /// <summary>

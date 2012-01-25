@@ -244,10 +244,12 @@ ORDER BY 1, 2;
         public string GetDropOrCreateScriptForIndexes(string tableName, string columnName, bool doDrop)
         {
             StringCollection sc = new StringCollection();
-            ScriptingOptions so = new ScriptingOptions();
-            so.ScriptDrops = doDrop;
-            so.IncludeDatabaseContext = false;
-            so.DriForeignKeys = true;
+            ScriptingOptions so = new ScriptingOptions()
+                {
+                    ScriptDrops = doDrop,
+                    IncludeDatabaseContext = false,
+                    DriForeignKeys = true
+                };
 
             StoredProcedure sp = new StoredProcedure();
             Server serv = new Server(_serverConnection);

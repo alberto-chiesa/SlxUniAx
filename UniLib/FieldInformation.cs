@@ -148,7 +148,7 @@ namespace Gianos.UniLib
         /// ToString overridden method
         /// </summary>
         /// <returns></returns>
-        public string ToString()
+        public override string ToString()
         {
             const string descriptionTemplate =
                 @"{0}
