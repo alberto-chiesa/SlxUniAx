@@ -67,11 +67,11 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnRefreshBundle = new System.Windows.Forms.Button();
             this.txtBundleText = new System.Windows.Forms.TextBox();
             this.btnLoadBundle = new System.Windows.Forms.Button();
             this.btnSaveBundle = new System.Windows.Forms.Button();
             this.modelBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnRefreshBundle = new System.Windows.Forms.Button();
             this.dlgOpenBunle = new System.Windows.Forms.OpenFileDialog();
             this.dlgSaveBundle = new System.Windows.Forms.SaveFileDialog();
             label1 = new System.Windows.Forms.Label();
@@ -171,8 +171,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabOutput);
-            this.splitContainer1.Panel2MinSize = 75;
-            this.splitContainer1.Size = new System.Drawing.Size(581, 439);
+            this.splitContainer1.Size = new System.Drawing.Size(581, 458);
             this.splitContainer1.SplitterDistance = 321;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -193,7 +192,7 @@
             this.tabSetup.Location = new System.Drawing.Point(4, 22);
             this.tabSetup.Name = "tabSetup";
             this.tabSetup.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSetup.Size = new System.Drawing.Size(573, 274);
+            this.tabSetup.Size = new System.Drawing.Size(573, 295);
             this.tabSetup.TabIndex = 0;
             this.tabSetup.Text = "Setup";
             this.tabSetup.UseVisualStyleBackColor = true;
@@ -232,7 +231,7 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(567, 270);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(567, 289);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // txtServer
@@ -334,7 +333,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.SetColumnSpan(this.btnLoad, 2);
             this.btnLoad.Enabled = false;
-            this.btnLoad.Location = new System.Drawing.Point(3, 227);
+            this.btnLoad.Location = new System.Drawing.Point(3, 246);
             this.btnLoad.MinimumSize = new System.Drawing.Size(0, 40);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(561, 40);
@@ -540,7 +539,7 @@
             this.tabOutput.Location = new System.Drawing.Point(0, 0);
             this.tabOutput.Name = "tabOutput";
             this.tabOutput.SelectedIndex = 0;
-            this.tabOutput.Size = new System.Drawing.Size(581, 114);
+            this.tabOutput.Size = new System.Drawing.Size(581, 133);
             this.tabOutput.TabIndex = 0;
             // 
             // tabPageOutput
@@ -549,7 +548,7 @@
             this.tabPageOutput.Location = new System.Drawing.Point(4, 22);
             this.tabPageOutput.Name = "tabPageOutput";
             this.tabPageOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOutput.Size = new System.Drawing.Size(573, 115);
+            this.tabPageOutput.Size = new System.Drawing.Size(573, 107);
             this.tabPageOutput.TabIndex = 0;
             this.tabPageOutput.Text = "Output";
             this.tabPageOutput.UseVisualStyleBackColor = true;
@@ -561,7 +560,7 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(567, 109);
+            this.textBox1.Size = new System.Drawing.Size(567, 101);
             this.textBox1.TabIndex = 0;
             // 
             // tabPage1
@@ -595,6 +594,18 @@
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel4.Size = new System.Drawing.Size(567, 82);
             this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // btnRefreshBundle
+            // 
+            this.btnRefreshBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRefreshBundle.Location = new System.Drawing.Point(3, 59);
+            this.btnRefreshBundle.Name = "btnRefreshBundle";
+            this.btnRefreshBundle.Size = new System.Drawing.Size(94, 22);
+            this.btnRefreshBundle.TabIndex = 3;
+            this.btnRefreshBundle.Text = "Refresh Text";
+            this.btnRefreshBundle.UseVisualStyleBackColor = true;
+            this.btnRefreshBundle.Click += new System.EventHandler(this.btnRefreshBundle_Click);
             // 
             // txtBundleText
             // 
@@ -631,18 +642,6 @@
             this.btnSaveBundle.Text = "Save Bundle";
             this.btnSaveBundle.UseVisualStyleBackColor = true;
             // 
-            // btnRefreshBundle
-            // 
-            this.btnRefreshBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshBundle.Location = new System.Drawing.Point(3, 59);
-            this.btnRefreshBundle.Name = "btnRefreshBundle";
-            this.btnRefreshBundle.Size = new System.Drawing.Size(94, 22);
-            this.btnRefreshBundle.TabIndex = 3;
-            this.btnRefreshBundle.Text = "Refresh Text";
-            this.btnRefreshBundle.UseVisualStyleBackColor = true;
-            this.btnRefreshBundle.Click += new System.EventHandler(this.btnRefreshBundle_Click);
-            // 
             // dlgOpenBunle
             // 
             this.dlgOpenBunle.FileName = "UnicodeBundle";
@@ -657,7 +656,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(581, 439);
+            this.ClientSize = new System.Drawing.Size(581, 458);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.Text = "Unicode Accelerator for SalesLogix - by Gianos Consulting";
