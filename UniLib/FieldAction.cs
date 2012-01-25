@@ -76,46 +76,39 @@ namespace Gianos.UniLib
         /// <returns></returns>
         public static IList<FieldAction> Parse(string inputText)
         {
-            List<FieldAction> actions = new List<FieldAction>();
-            var matches = _ParseLine.Matches(inputText);
-
-            foreach (Match aMatch in matches)
-            {
-                FieldAction act = new FieldAction()
-                {
-                    TableName = aMatch.Groups["TableName"].Value.ToUpper(),
-                    FieldName = aMatch.Groups["FieldName"].Value.ToUpper()
-                };
-
-                var newStateStr = aMatch.Groups["NewState"].Value.ToLower();
-
-                switch (newStateStr)
-                {
-                    case "unicode":
-                        act.NewState = FieldState.Unicode;
-                        break;
-                    case "ansi":
-                        act.NewState = FieldState.Ansi;
-                        break;
-                    default:
-                        throw new Exception("An unexpected error occurred parsing the actions: found " +
-                            newStateStr + " but expected Unicode or Ansi.");
-                }
-
-                if (aMatch.Groups["NewSize"].Success)
-                {
-                    int newSize = 0;
-
-                    if (Int32.TryParse(aMatch.Groups["NewSize"].Value, out newSize))
+            var a = from Match aMatch in _ParseLine.Matches(inputText)
+                    select new FieldAction()
                     {
-                        act.NewSize = newSize;
-                    }
-                }
+                        TableName = aMatch.Groups["TableName"].Value.ToUpper(),
+                        FieldName = aMatch.Groups["FieldName"].Value.ToUpper(),
+                        NewState = GetNewStateFromMatch(aMatch),
+                        NewSize = GetNewSizeFromMatch(aMatch)
+                    };
 
-                actions.Add(act);
+            return a.ToList<FieldAction>();
+        }
+
+        private static int GetNewSizeFromMatch(Match aMatch)
+        {
+            int newSize = 0;
+
+            if (aMatch.Groups["NewSize"].Success && Int32.TryParse(aMatch.Groups["NewSize"].Value, out newSize))
+            {
+                return newSize;
             }
 
-            return actions;
+            return 0;
+        }
+
+        private static FieldState GetNewStateFromMatch(Match aMatch)
+        {
+            var newStateStr = aMatch.Groups["NewState"].Value.ToLower();
+
+            if (newStateStr == "unicode") return FieldState.Unicode;
+            if (newStateStr == "ansi") return FieldState.Ansi;
+
+            throw new Exception("An unexpected error occurred parsing the actions: found " +
+                newStateStr + " but expected Unicode or Ansi.");
         }
     }
 }

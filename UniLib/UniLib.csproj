@@ -58,11 +58,11 @@
     <Compile Include="FieldAction.cs" />
     <Compile Include="FieldInformation.cs" />
     <Compile Include="FieldInformationManager.cs" />
-    <Compile Include="FSModelPersister.cs" />
-    <Compile Include="IModelPersister.cs" />
+    <Compile Include="ModelPersisters\FSModelPersister.cs" />
+    <Compile Include="ModelPersisters\IModelPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SLXModelHandler.cs" />
-    <Compile Include="VFSModelPersister.cs" />
+    <Compile Include="ModelPersisters\VFSModelPersister.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

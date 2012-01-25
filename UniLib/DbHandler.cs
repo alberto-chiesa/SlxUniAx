@@ -167,10 +167,35 @@ ORDER BY 1, 2;
             string createScript = GetCreateScriptForIndexes(field.tableName, field.fieldName),
                 dropScript = GetDropScriptForIndexes(field.tableName, field.fieldName);
 
+            Column col = GetColumnFromSQLMgmtObjects(field);
+            SqlDataType newType = GetNewTypeForColumn(UnicodeEnabled, col);
+
+            OpenDbConnection();
+
+            // Drop the indexes on the field
+            ExecuteCommandOnDBConnection(dropScript);
+
+            // Actually alter the column type (using SMO)
+            col.DataType = new DataType(newType, (newLength ?? col.DataType.MaximumLength));
+            col.Alter();
+
+            // restores the indexes on the field
+            ExecuteCommandOnDBConnection(createScript);
+
+            CloseConnection();
+        }
+
+        private Column GetColumnFromSQLMgmtObjects(FieldInformation field)
+        {
             Server serv = new Server(_serverConnection);
             Database dbase = serv.Databases[_databaseName];
             Table table = dbase.Tables[field.tableName, "sysdba"];
             Column col = table.Columns[field.fieldName];
+            return col;
+        }
+
+        private static SqlDataType GetNewTypeForColumn(bool UnicodeEnabled, Column col)
+        {
             SqlDataType newType = SqlDataType.NVarChar;
             if (UnicodeEnabled)
             {
@@ -198,37 +223,20 @@ ORDER BY 1, 2;
                 else
                     throw new Exception(String.Format("The column type {0} is unknown. Cannot alter column.", col.DataType.SqlDataType.ToString()));
             }
+            return newType;
+        }
 
-            OpenDbConnection();
-            SqlCommand cmd;
-
-            // Drop the indexes on the field
+        private void ExecuteCommandOnDBConnection(string dropScript)
+        {
             if (!String.IsNullOrEmpty(dropScript))
             {
+                SqlCommand cmd;
                 cmd = dbConnection.CreateCommand();
                 cmd.CommandText = dropScript;
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.CommandTimeout = 3600;
                 cmd.ExecuteNonQuery();
             }
-
-            // Actually alter the column type (using SMO)
-
-            col.DataType = new DataType(newType, (newLength ?? col.DataType.MaximumLength));
-
-            col.Alter();
-
-            // restores the indexes on the field
-            if (!String.IsNullOrEmpty(createScript))
-            {
-                cmd = dbConnection.CreateCommand();
-                cmd.CommandText = createScript;
-                cmd.CommandType = System.Data.CommandType.Text;
-                cmd.CommandTimeout = 3600;
-                cmd.ExecuteNonQuery();
-            }
-
-            CloseConnection();
         }
 
         public string GetCreateScriptForIndexes(string tableName, string columnName)

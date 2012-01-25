@@ -140,12 +140,9 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
             // read sql info for each field
             if (!recSet.Read()) return null;
 
-            var ms = UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
-            string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
-            ms.Close();
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load(new System.IO.StringReader(xmlString));
+            XmlDocument doc = BuildXmlDocumentFromRAWEntityFile(
+                recSet.GetValue(0) as byte[],
+                (recSet.GetValue(1) as string) == "T");
 
             recSet.Close();
             CloseConnection();
@@ -153,15 +150,22 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
             return doc;
         }
 
+        private static XmlDocument BuildXmlDocumentFromRAWEntityFile(byte[] data, bool mustCompress)
+        {
+            var ms = UnpackItemData(data, mustCompress);
+            string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
+            ms.Close();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(new System.IO.StringReader(xmlString));
+            return doc;
+        }
+
         public void SaveEntityFileForField(FieldInformation field, XmlDocument doc)
         {
             bool isCompressed = false;
 
-            MemoryStream ms = new MemoryStream();
-            doc.Save(ms);
-            ms.Flush();
-            ms.Position = 0;
-            byte[] binaryData = PackItemData(ms, true, ref isCompressed);
+            byte[] binaryData = BuildEntityFileBinaryData(doc, ref isCompressed);
 
             OpenDbConnection();
             var cmd = dbConnection.CreateCommand();
@@ -175,17 +179,25 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
 
             cmd.CommandType = System.Data.CommandType.Text;
 
-            cmd.Parameters
-                .Add("@dataPar", System.Data.SqlDbType.Image)
+            cmd.Parameters.Add("@dataPar", System.Data.SqlDbType.Image)
                 .Value = binaryData;
 
-            cmd.Parameters
-                .Add("@isCompressedPar", System.Data.SqlDbType.Char)
+            cmd.Parameters.Add("@isCompressedPar", System.Data.SqlDbType.Char)
                 .Value = isCompressed ? "T" : "F";
 
             cmd.ExecuteNonQuery();
 
             CloseConnection();
+        }
+
+        private static byte[] BuildEntityFileBinaryData(XmlDocument doc, ref bool isCompressed)
+        {
+            MemoryStream ms = new MemoryStream();
+            doc.Save(ms);
+            ms.Flush();
+            ms.Position = 0;
+            byte[] binaryData = PackItemData(ms, true, ref isCompressed);
+            return binaryData;
         }
 
         /// <summary>
