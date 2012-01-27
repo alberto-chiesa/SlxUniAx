@@ -327,15 +327,96 @@ namespace SlxUniAx
             this.Refresh();
         }
 
+
         private void btnRefreshBundle_Click(object sender, EventArgs e)
         {
-            this.LoadBundleText();
+            RefreshBundleText();
         }
 
-        private void LoadBundleText()
+        private void RefreshBundleText()
         {
             this.txtBundleText.Text = this.fields.GetBundleText();
         }
 
+
+        private void btnLoadBundle_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dlgOpenBunle.ShowDialog() == DialogResult.OK)
+                {
+                    fields.LoadAndApplyBundle(dlgOpenBunle.OpenFile());
+
+                    this.RefreshTreeViewAfterLoadBundle();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Log("Caught exception when reading bundle:");
+                this.Log(ex.Message);
+            }
+
+            RefreshBundleText();
+        }
+
+        private void RefreshTreeViewAfterLoadBundle()
+        {
+            var dict = GetTreeNodeForFieldDict(this.treeFields.Nodes);
+
+            foreach(var action in fields.GetActionArray())
+            {
+                if (action != null &&
+                    action.FieldInfo != null &&
+                    dict.ContainsKey(action.FieldInfo))
+                {
+                    var node = dict[action.FieldInfo];
+
+                    node.SelectedImageIndex = node.ImageIndex =
+                        (int)(action.NewState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
+
+                    if (node.Parent != null)
+                        node.Parent.Expand();
+                }
+            }
+        }
+
+        private Dictionary<FieldInformation, TreeNode> GetTreeNodeForFieldDict(TreeNodeCollection nodes)
+        {
+            return GetTreeNodeForFieldDict(nodes, new Dictionary<FieldInformation, TreeNode>());
+        }
+
+        private Dictionary<FieldInformation, TreeNode> GetTreeNodeForFieldDict(TreeNodeCollection nodes, Dictionary<FieldInformation, TreeNode> dict)
+        {
+            foreach (TreeNode node in nodes)
+            {
+                var field = node.Tag as FieldInformation;
+                if (field != null)
+                    dict[field] = node;
+
+                if (node.Nodes != null && node.Nodes.Count > 0)
+                    GetTreeNodeForFieldDict(node.Nodes, dict);
+            }
+
+            return dict;
+        }
+
+        /// <summary>
+        /// Save the actions to a bundle file
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSaveBundle_Click(object sender, EventArgs e)
+        {
+            RefreshBundleText();
+
+            if (dlgSaveBundle.ShowDialog() == DialogResult.OK)
+            {
+                using (System.IO.Stream bundleFile = dlgSaveBundle.OpenFile())
+                {
+                    this.fields.SaveBundleTo(bundleFile);
+                }
+            }
+
+        }
     }
 }
