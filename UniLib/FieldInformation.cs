@@ -122,13 +122,9 @@ namespace Gianos.UniLib
                 bool? sql = this.isSqlUnicode;
                 bool? slx = this.isSlxUnicode;
 
-                if (sql == true && slx == true)
-                {
-                    return FieldState.Unicode;
-                }
+                if (sql == true && slx == true) return FieldState.Unicode;
 
-                if (sql == false && slx == false)
-                    return FieldState.Ansi;
+                if (sql == false && slx == false) return FieldState.Ansi;
 
                 return FieldState.Error;
             }

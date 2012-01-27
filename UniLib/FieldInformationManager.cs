@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Gianos.UniLib
 {
@@ -249,6 +250,30 @@ namespace Gianos.UniLib
             return sb.ToString();
         }
 
+        public void LoadAndApplyBundle(Stream stream)
+        {
+            try
+            {
+                StreamReader sr = new StreamReader(stream, UTF8Encoding.UTF8);
+                string bundleText = sr.ReadToEnd();
+                sr.Dispose();
+
+                LoadAndApplyBundle(bundleText);
+            }
+            finally
+            {
+                if (stream != null) stream.Dispose();
+            }
+        }
+
+        public void LoadAndApplyBundle(string bundleText)
+        {
+            var actions = FieldAction.Parse(bundleText);
+            
+            if (actions != null && actions.Count > 0)
+                this.ApplyBundleToFieldInformation(actions);
+        }
+
         /// <summary>
         /// Given a list of actions, applies them to the field data.
         /// Throws exceptions if inexistent fields are specified
@@ -277,5 +302,12 @@ namespace Gianos.UniLib
             }
         }
 
+
+        public void SaveBundleTo(System.IO.Stream bundleFile)
+        {
+            byte[] utf8EncodedBundle = UTF8Encoding.UTF8.GetBytes(GetBundleText());
+
+            bundleFile.Write(utf8EncodedBundle, 0, utf8EncodedBundle.Length);
+        }
     }
 }
