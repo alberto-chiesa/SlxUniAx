@@ -232,8 +232,7 @@ namespace SlxUniAx
         /// <param name="e"></param>
         private void btnSetUnicode_Click(object sender, EventArgs e)
         {
-            SetUnicodeness(FieldState.Unicode);
-            this.RefreshBundleText();
+            SetNewStateAndSizeForSelectedNode(FieldState.Unicode);
         }
 
         /// <summary>
@@ -243,33 +242,42 @@ namespace SlxUniAx
         /// <param name="e"></param>
         private void btnSetAnsi_Click(object sender, EventArgs e)
         {
-            SetUnicodeness(FieldState.Ansi);
-            this.RefreshBundleText();
+            SetNewStateAndSizeForSelectedNode(FieldState.Ansi);
         }
 
         /// <summary>
         /// Sets the new state of a field to Unicode or text
         /// </summary>
         /// <param name="newState"></param>
-        private void SetUnicodeness(FieldState newState)
+        private void SetNewStateAndSizeForSelectedNode(FieldState newState)
         {
-            if (treeFields.SelectedNode == null) return;
+            FieldInformation selectedField = GetSelectedField();
 
-            FieldInformation selectedField = treeFields.SelectedNode.Tag as FieldInformation;
+            if (selectedField == null) return;
+            
+            selectedField.NewState = newState;
 
-            if (selectedField != null)
+            SetNewSizeForSelectedField(selectedField);
+
+            treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
+                (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
+        
+            this.RefreshBundleText();
+        }
+
+        private FieldInformation GetSelectedField()
+        {
+            return (treeFields.SelectedNode == null) ?
+                null : treeFields.SelectedNode.Tag as FieldInformation;
+        }
+
+        private void SetNewSizeForSelectedField(FieldInformation selectedField)
+        {
+            int newSize;
+
+            if (Int32.TryParse(cmbNewSize.Text, out newSize))
             {
-                selectedField.NewState = newState;
-
-                int newSize;
-
-                if (Int32.TryParse(cmbNewSize.Text, out newSize))
-                {
-                    selectedField.NewLength = newSize;
-                }
-
-                treeFields.SelectedNode.SelectedImageIndex = treeFields.SelectedNode.ImageIndex =
-                    (int)(newState == FieldState.Unicode ? StatusIcons.ToUnicode : StatusIcons.ToText);
+                selectedField.NewLength = newSize;
             }
         }
 

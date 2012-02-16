@@ -28,15 +28,16 @@ account.    accountmanagerid -> ansi(1)";
 
 
             return;
-            var model = new SLXModelHandler(@"C:\Users\ACA.GIANOS\Documents\Dev\bvweb\Model");
-            var fields = model.FindEntityModels();
-            var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sysdba", "masterkey");
-            fields = dbHandler.ReadTableDataFromSLXDb(fields);
-            var f = fields["BVSTORE"]["COD_COUNTRY"];
 
-            var s = f.State;
-            f = fields["ACCOUNT"]["ACCOUNT"];
-            s = f.State;
+            //var model = new SLXModelHandler(@"C:\Users\ACA.GIANOS\Documents\Dev\bvweb\Model");
+            //var fields = model.FindEntityModels();
+            //var dbHandler = new DbHandler(".\\ACA2008", "BVSLX_PROD", "sysdba", "masterkey");
+            //fields = dbHandler.ReadTableDataFromSLXDb(fields);
+            //var f = fields["BVSTORE"]["COD_COUNTRY"];
+
+            //var s = f.State;
+            //f = fields["ACCOUNT"]["ACCOUNT"];
+            //s = f.State;
             //model.SetUnicodeOnSlxField(f, true);
             //dbHandler.SetUnicodeOnDbField(f, true);
             //var s = dbHandler.GetCreateScriptForIndexes("C_BASE_TABLE", "NETSALEEUR");

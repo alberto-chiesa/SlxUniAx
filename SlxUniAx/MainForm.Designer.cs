@@ -62,20 +62,20 @@
             this.btnSetUnicode = new System.Windows.Forms.Button();
             this.chkKeepSize = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.tabOutput = new System.Windows.Forms.TabControl();
+            this.tabPageOutput = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabActions = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.btnRefreshBundle = new System.Windows.Forms.Button();
+            this.txtBundleText = new System.Windows.Forms.TextBox();
+            this.btnLoadBundle = new System.Windows.Forms.Button();
+            this.btnSaveBundle = new System.Windows.Forms.Button();
             this.modelBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.dlgOpenBunle = new System.Windows.Forms.OpenFileDialog();
             this.dlgSaveBundle = new System.Windows.Forms.SaveFileDialog();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.tabPageOutput = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.tabOutput = new System.Windows.Forms.TabControl();
-            this.tabActions = new System.Windows.Forms.TabPage();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.btnSaveBundle = new System.Windows.Forms.Button();
-            this.btnLoadBundle = new System.Windows.Forms.Button();
-            this.txtBundleText = new System.Windows.Forms.TextBox();
-            this.btnRefreshBundle = new System.Windows.Forms.Button();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -94,11 +94,11 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.tabPageOutput.SuspendLayout();
             this.tabOutput.SuspendLayout();
+            this.tabPageOutput.SuspendLayout();
+            this.tabControl1.SuspendLayout();
             this.tabActions.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.tabControl1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -539,16 +539,6 @@
                 "plying any changes.";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // dlgOpenBunle
-            // 
-            this.dlgOpenBunle.FileName = "UnicodeBundle";
-            this.dlgOpenBunle.Filter = "Unicode Bundle Files|*.ucb|All files|*.*";
-            // 
-            // dlgSaveBundle
-            // 
-            this.dlgSaveBundle.Filter = "Unicode Bundle Files|*.ucb|All files|*.*";
-            this.dlgSaveBundle.Title = "Save Bundle";
-            // 
             // splitContainer2
             // 
             this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -565,6 +555,16 @@
             this.splitContainer2.Size = new System.Drawing.Size(581, 133);
             this.splitContainer2.SplitterDistance = 282;
             this.splitContainer2.TabIndex = 0;
+            // 
+            // tabOutput
+            // 
+            this.tabOutput.Controls.Add(this.tabPageOutput);
+            this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabOutput.Location = new System.Drawing.Point(0, 0);
+            this.tabOutput.Name = "tabOutput";
+            this.tabOutput.SelectedIndex = 0;
+            this.tabOutput.Size = new System.Drawing.Size(282, 133);
+            this.tabOutput.TabIndex = 1;
             // 
             // tabPageOutput
             // 
@@ -587,15 +587,15 @@
             this.textBox1.Size = new System.Drawing.Size(268, 101);
             this.textBox1.TabIndex = 0;
             // 
-            // tabOutput
+            // tabControl1
             // 
-            this.tabOutput.Controls.Add(this.tabPageOutput);
-            this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabOutput.Location = new System.Drawing.Point(0, 0);
-            this.tabOutput.Name = "tabOutput";
-            this.tabOutput.SelectedIndex = 0;
-            this.tabOutput.Size = new System.Drawing.Size(282, 133);
-            this.tabOutput.TabIndex = 1;
+            this.tabControl1.Controls.Add(this.tabActions);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(295, 133);
+            this.tabControl1.TabIndex = 1;
             // 
             // tabActions
             // 
@@ -629,29 +629,17 @@
             this.tableLayoutPanel4.Size = new System.Drawing.Size(281, 101);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
-            // btnSaveBundle
+            // btnRefreshBundle
             // 
-            this.btnSaveBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.btnRefreshBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSaveBundle.Location = new System.Drawing.Point(3, 31);
-            this.btnSaveBundle.Name = "btnSaveBundle";
-            this.btnSaveBundle.Size = new System.Drawing.Size(94, 22);
-            this.btnSaveBundle.TabIndex = 1;
-            this.btnSaveBundle.Text = "Save Bundle";
-            this.btnSaveBundle.UseVisualStyleBackColor = true;
-            this.btnSaveBundle.Click += new System.EventHandler(this.btnSaveBundle_Click);
-            // 
-            // btnLoadBundle
-            // 
-            this.btnLoadBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLoadBundle.Location = new System.Drawing.Point(3, 3);
-            this.btnLoadBundle.Name = "btnLoadBundle";
-            this.btnLoadBundle.Size = new System.Drawing.Size(94, 22);
-            this.btnLoadBundle.TabIndex = 0;
-            this.btnLoadBundle.Text = "Load Bundle";
-            this.btnLoadBundle.UseVisualStyleBackColor = true;
-            this.btnLoadBundle.Click += new System.EventHandler(this.btnLoadBundle_Click);
+            this.btnRefreshBundle.Location = new System.Drawing.Point(3, 59);
+            this.btnRefreshBundle.Name = "btnRefreshBundle";
+            this.btnRefreshBundle.Size = new System.Drawing.Size(94, 22);
+            this.btnRefreshBundle.TabIndex = 3;
+            this.btnRefreshBundle.Text = "Refresh Text";
+            this.btnRefreshBundle.UseVisualStyleBackColor = true;
+            this.btnRefreshBundle.Click += new System.EventHandler(this.btnRefreshBundle_Click);
             // 
             // txtBundleText
             // 
@@ -666,27 +654,39 @@
             this.txtBundleText.Size = new System.Drawing.Size(461, 95);
             this.txtBundleText.TabIndex = 2;
             // 
-            // btnRefreshBundle
+            // btnLoadBundle
             // 
-            this.btnRefreshBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.btnLoadBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefreshBundle.Location = new System.Drawing.Point(3, 59);
-            this.btnRefreshBundle.Name = "btnRefreshBundle";
-            this.btnRefreshBundle.Size = new System.Drawing.Size(94, 22);
-            this.btnRefreshBundle.TabIndex = 3;
-            this.btnRefreshBundle.Text = "Refresh Text";
-            this.btnRefreshBundle.UseVisualStyleBackColor = true;
-            this.btnRefreshBundle.Click += new System.EventHandler(this.btnRefreshBundle_Click);
+            this.btnLoadBundle.Location = new System.Drawing.Point(3, 3);
+            this.btnLoadBundle.Name = "btnLoadBundle";
+            this.btnLoadBundle.Size = new System.Drawing.Size(94, 22);
+            this.btnLoadBundle.TabIndex = 0;
+            this.btnLoadBundle.Text = "Load Bundle";
+            this.btnLoadBundle.UseVisualStyleBackColor = true;
+            this.btnLoadBundle.Click += new System.EventHandler(this.btnLoadBundle_Click);
             // 
-            // tabControl1
+            // btnSaveBundle
             // 
-            this.tabControl1.Controls.Add(this.tabActions);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(295, 133);
-            this.tabControl1.TabIndex = 1;
+            this.btnSaveBundle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSaveBundle.Location = new System.Drawing.Point(3, 31);
+            this.btnSaveBundle.Name = "btnSaveBundle";
+            this.btnSaveBundle.Size = new System.Drawing.Size(94, 22);
+            this.btnSaveBundle.TabIndex = 1;
+            this.btnSaveBundle.Text = "Save Bundle";
+            this.btnSaveBundle.UseVisualStyleBackColor = true;
+            this.btnSaveBundle.Click += new System.EventHandler(this.btnSaveBundle_Click);
+            // 
+            // dlgOpenBunle
+            // 
+            this.dlgOpenBunle.FileName = "UnicodeBundle";
+            this.dlgOpenBunle.Filter = "Unicode Bundle Files|*.ucb|All files|*.*";
+            // 
+            // dlgSaveBundle
+            // 
+            this.dlgSaveBundle.Filter = "Unicode Bundle Files|*.ucb|All files|*.*";
+            this.dlgSaveBundle.Title = "Save Bundle";
             // 
             // Form1
             // 
@@ -712,14 +712,14 @@
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             this.splitContainer2.ResumeLayout(false);
+            this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
-            this.tabOutput.ResumeLayout(false);
+            this.tabControl1.ResumeLayout(false);
             this.tabActions.ResumeLayout(false);
             this.tabActions.PerformLayout();
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

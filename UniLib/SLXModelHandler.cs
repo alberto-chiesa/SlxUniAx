@@ -155,7 +155,7 @@ namespace Gianos.UniLib
 
                 ModelPersister.SaveEntityFileForField(field, doc);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw;// new Exception("Error reading entity model files!");
             }
