@@ -233,6 +233,7 @@ namespace SlxUniAx
         private void btnSetUnicode_Click(object sender, EventArgs e)
         {
             SetUnicodeness(FieldState.Unicode);
+            this.RefreshBundleText();
         }
 
         /// <summary>
@@ -243,6 +244,7 @@ namespace SlxUniAx
         private void btnSetAnsi_Click(object sender, EventArgs e)
         {
             SetUnicodeness(FieldState.Ansi);
+            this.RefreshBundleText();
         }
 
         /// <summary>
@@ -361,7 +363,7 @@ namespace SlxUniAx
 
         private void RefreshTreeViewAfterLoadBundle()
         {
-            var dict = GetTreeNodeForFieldDict(this.treeFields.Nodes);
+            var dict = GetFieldToTreeNodeMapping(this.treeFields.Nodes);
 
             foreach(var action in fields.GetActionArray())
             {
@@ -380,24 +382,26 @@ namespace SlxUniAx
             }
         }
 
-        private Dictionary<FieldInformation, TreeNode> GetTreeNodeForFieldDict(TreeNodeCollection nodes)
+        private Dictionary<FieldInformation, TreeNode> GetFieldToTreeNodeMapping(TreeNodeCollection nodes)
         {
-            return GetTreeNodeForFieldDict(nodes, new Dictionary<FieldInformation, TreeNode>());
+            var dict = new Dictionary<FieldInformation, TreeNode>();
+            
+            GetFieldToTreeNodeMapping(nodes, dict);
+
+            return dict;
         }
 
-        private Dictionary<FieldInformation, TreeNode> GetTreeNodeForFieldDict(TreeNodeCollection nodes, Dictionary<FieldInformation, TreeNode> dict)
+        private void GetFieldToTreeNodeMapping(TreeNodeCollection nodes, Dictionary<FieldInformation, TreeNode> dict)
         {
+            if (nodes == null || nodes.Count <= 0) return;
+                
             foreach (TreeNode node in nodes)
             {
                 var field = node.Tag as FieldInformation;
-                if (field != null)
-                    dict[field] = node;
+                if (field != null) dict[field] = node;
 
-                if (node.Nodes != null && node.Nodes.Count > 0)
-                    GetTreeNodeForFieldDict(node.Nodes, dict);
+                GetFieldToTreeNodeMapping(node.Nodes, dict);
             }
-
-            return dict;
         }
 
         /// <summary>

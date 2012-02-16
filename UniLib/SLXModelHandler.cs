@@ -93,8 +93,7 @@ namespace Gianos.UniLib
 
                     var tableName = nav.SelectSingleNode("//entity").GetAttribute("tableName", String.Empty);
 
-                    var properties = nav.Select("//property");
-                    foreach (XPathNavigator property in properties)
+                    foreach (XPathNavigator property in nav.Select("//property"))
                     {
                         string slxType = String.Empty;
 
