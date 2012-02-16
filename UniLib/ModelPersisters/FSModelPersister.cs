@@ -45,6 +45,7 @@ namespace Gianos.UniLib
                 var fileReader = entityFile.OpenText();
                 var entityXml = new XPathDocument(fileReader);
                 fileReader.Close();
+                fileReader.Dispose();
 
                 yield return entityXml;
             }
@@ -66,8 +67,6 @@ namespace Gianos.UniLib
                 throw new Exception("Zero or more than 1 file found for entity " + field.tableName + "! Aborting.");
 
             var entityFile = entityFiles[0];
-
-            var tr = new System.IO.FileStream(entityFile.FullName, FileMode.Open);
 
             XmlDocument doc = new XmlDocument();
             doc.Load(entityFile.FullName);
