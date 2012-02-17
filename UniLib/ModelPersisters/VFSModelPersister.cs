@@ -11,6 +11,11 @@ namespace Gianos.UniLib
 {
     class VFSModelPersister : IModelPersister
     {
+        private const string SelectEntityQueryText =
+@"SELECT ITEMDATA, ISCOMPRESSED
+FROM VIRTUALFILESYSTEM
+WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
+
         /// <summary>
         /// Connection String property
         /// </summary>
@@ -89,13 +94,7 @@ namespace Gianos.UniLib
         public IEnumerable<XPathDocument> GetEntityFiles()
         {
             OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"SELECT ITEMDATA, ISCOMPRESSED
-FROM VIRTUALFILESYSTEM
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
+            var cmd = CreateSelectEntityFilesCommand();
 
             // read the field information from the db
             var recSet = cmd.ExecuteReader();
@@ -106,10 +105,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
             // read sql info for each field
             while (recSet.Read())
             {
-                var ms = UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
-                string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
-                ms.Close();
-                yield return new XPathDocument(new System.IO.StringReader(xmlString));
+                yield return new XPathDocument(GetXmlStringFromFileDataReader(recSet));
             }
 
             recSet.Close();
@@ -118,6 +114,23 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
             //throw new Exception("Some error occurred retrieving field information from the db! Aborting.");
 
             yield break;
+        }
+
+        private static System.IO.StringReader GetXmlStringFromFileDataReader(System.Data.SqlClient.SqlDataReader recSet)
+        {
+            var ms = UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
+            string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
+            ms.Close();
+
+            return new System.IO.StringReader(xmlString);
+        }
+
+        private System.Data.SqlClient.SqlCommand CreateSelectEntityFilesCommand()
+        {
+            var cmd = dbConnection.CreateCommand();
+            cmd.CommandText = VFSModelPersister.SelectEntityQueryText;
+            cmd.CommandType = System.Data.CommandType.Text;
+            return cmd;
         }
 
         public XmlDocument OpenEntityFileForField(FieldInformation field)
