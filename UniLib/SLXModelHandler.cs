@@ -89,29 +89,7 @@ namespace Gianos.UniLib
             {
                 foreach (XPathDocument entityXml in ModelPersister.GetEntityFiles())
                 {
-                    var nav = entityXml.CreateNavigator();
-
-                    var tableName = nav.SelectSingleNode("//entity").GetAttribute("tableName", String.Empty);
-
-                    foreach (XPathNavigator property in nav.Select("//property"))
-                    {
-                        string slxType = String.Empty;
-
-                        if (property.Select("SystemDataType/TextDataType").Count > 0)
-                            slxType = "TextDataType";
-                        else if (property.Select("SystemDataType/UnicodeTextDataType").Count > 0)
-                            slxType = "UnicodeTextDataType";
-                        else
-                            continue;
-
-                        var propertyName = property.GetAttribute("columnName", String.Empty).ToString();
-                        FieldInformation f = dbFields.InitField(tableName.ToUpper(), propertyName.ToUpper());
-                        f.slxType = slxType;
-                        var lengthStr = property.GetAttribute("maxLength", String.Empty).ToString();
-                        int len;
-
-                        f.slxLength = Int32.TryParse(lengthStr, out len) ? len : 0;
-                    }
+                    ReadFieldInformationsForEntity(dbFields, entityXml.CreateNavigator());
                 }
             }
             catch (Exception)
@@ -120,6 +98,43 @@ namespace Gianos.UniLib
             }
 
             return dbFields;
+        }
+
+        private static void ReadFieldInformationsForEntity(FieldInformationManager dbFields, XPathNavigator nav)
+        {
+            var tableName = nav.SelectSingleNode("//entity").GetAttribute("tableName", String.Empty);
+
+            foreach (XPathNavigator property in nav.Select("//property"))
+            {
+                string slxType = GetSlxTypeOfXmlProperty(property);
+
+                if (!String.IsNullOrEmpty(slxType))
+                {
+                    var propertyName = property.GetAttribute("columnName", String.Empty).ToString();
+                    var field = dbFields.InitField(tableName.ToUpper(), propertyName.ToUpper());
+
+                    field.slxType = slxType;
+                    field.slxLength = GetFieldLengthFromPropertyXml(property);
+                }
+            }
+        }
+
+        private static string GetSlxTypeOfXmlProperty(XPathNavigator property)
+        {
+            if (property.Select("SystemDataType/TextDataType").Count > 0)
+                return "TextDataType";
+            else if (property.Select("SystemDataType/UnicodeTextDataType").Count > 0)
+                return "UnicodeTextDataType";
+
+            return String.Empty;
+        }
+
+        private static Int32 GetFieldLengthFromPropertyXml(XPathNavigator property)
+        {
+            var lengthStr = property.GetAttribute("maxLength", String.Empty).ToString();
+            int len;
+
+            return Int32.TryParse(lengthStr, out len) ? len : 0;
         }
 
         /// <summary>
