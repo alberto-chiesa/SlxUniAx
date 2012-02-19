@@ -58,13 +58,13 @@ namespace Gianos.UniLib
         /// </summary>
         /// <param name="field">Field Data</param>
         /// <returns></returns>
-        public XmlDocument OpenEntityFileForField(FieldInformation field)
+        public XmlDocument OpenEntityFile(string tableName)
         {
             var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            var entityFiles = entityModelDir.GetFiles("*." + field.tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
+            var entityFiles = entityModelDir.GetFiles("*." + tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
 
             if (entityFiles.Length != 1)
-                throw new Exception("Zero or more than 1 file found for entity " + field.tableName + "! Aborting.");
+                throw new Exception("Zero or more than 1 file found for entity " + tableName + "! Aborting.");
 
             var entityFile = entityFiles[0];
 
@@ -79,13 +79,13 @@ namespace Gianos.UniLib
         /// </summary>
         /// <param name="field"></param>
         /// <param name="doc"></param>
-        public void SaveEntityFileForField(FieldInformation field, XmlDocument doc)
+        public void SaveEntityFile(string tableName, XmlDocument doc)
         {
             var entityModelDir = modelDir.GetDirectories("Entity Model", System.IO.SearchOption.TopDirectoryOnly)[0];
-            var entityFiles = entityModelDir.GetFiles("*." + field.tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
+            var entityFiles = entityModelDir.GetFiles("*." + tableName + ".entity.xml", System.IO.SearchOption.AllDirectories);
 
             if (entityFiles.Length != 1)
-                throw new Exception("Zero or more than 1 file found for entity " + field.tableName + "! Aborting.");
+                throw new Exception("Zero or more than 1 file found for entity " + tableName + "! Aborting.");
 
             var entityFile = entityFiles[0];
 

@@ -132,7 +132,7 @@ namespace Gianos.UniLib
         {
             try
             {
-                XmlDocument doc = ModelPersister.OpenEntityFileForField(field);
+                XmlDocument doc = ModelPersister.OpenEntityFile(field.tableName);
 
                 var property = doc.SelectSingleNode(String.Format(@"//property[@columnName='{0}']", field.fieldName));
                 
@@ -153,7 +153,7 @@ namespace Gianos.UniLib
                 
                 doc.CreateNavigator().SelectSingleNode(xpathSelector).OuterXml = newTypeXML;
 
-                ModelPersister.SaveEntityFileForField(field, doc);
+                ModelPersister.SaveEntityFile(field.tableName, doc);
             }
             catch (Exception)
             {

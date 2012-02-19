@@ -122,10 +122,10 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.{0}.entity.xml'
             return cmd;
         }
 
-        public XmlDocument OpenEntityFileForField(FieldInformation field)
+        public XmlDocument OpenEntityFile(string tableName)
         {
             OpenDbConnection();
-            var cmd = CreateSqlCommand(String.Format(SelectFileQueryText, field.tableName));
+            var cmd = CreateSqlCommand(String.Format(SelectFileQueryText, tableName));
 
             // read the field information from the db
             var recSet = cmd.ExecuteReader();
@@ -163,14 +163,14 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.{0}.entity.xml'
             return new System.IO.StringReader(xmlString);
         }
 
-        public void SaveEntityFileForField(FieldInformation field, XmlDocument doc)
+        public void SaveEntityFile(string tableName, XmlDocument doc)
         {
             bool isCompressed = false;
 
             byte[] binaryData = BuildEntityFileBinaryData(doc, ref isCompressed);
 
             OpenDbConnection();
-            var cmd = CreateSqlCommand(String.Format(UpdateFileQueryText, field.tableName));
+            var cmd = CreateSqlCommand(String.Format(UpdateFileQueryText, tableName));
 
             cmd.Parameters.Add("@dataPar", System.Data.SqlDbType.Image)
                 .Value = binaryData;

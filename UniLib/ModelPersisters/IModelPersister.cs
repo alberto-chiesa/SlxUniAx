@@ -25,7 +25,7 @@ namespace Gianos.UniLib
         /// </summary>
         /// <param name="field">Field used to identity the table.</param>
         /// <returns>XmlDocument of the pertaining entity.</returns>
-        XmlDocument OpenEntityFileForField(FieldInformation field);
+        XmlDocument OpenEntityFile(string tableName);
 
         /// <summary>
         /// Saves the passed XmlDocument to the model, for the entity
@@ -33,6 +33,6 @@ namespace Gianos.UniLib
         /// </summary>
         /// <param name="field">Field defining the table</param>
         /// <param name="doc">Xml Document to be persisted</param>
-        void SaveEntityFileForField(FieldInformation field, XmlDocument doc);
+        void SaveEntityFile(string tableName, XmlDocument doc);
     }
 }
