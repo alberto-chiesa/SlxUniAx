@@ -131,7 +131,7 @@ namespace Gianos.UniLib
 
         private static Int32 GetFieldLengthFromPropertyXml(XPathNavigator property)
         {
-            var lengthStr = property.GetAttribute("maxLength", String.Empty).ToString();
+            var lengthStr = property.GetAttribute("maxLength", String.Empty);
             int len;
 
             return Int32.TryParse(lengthStr, out len) ? len : 0;
