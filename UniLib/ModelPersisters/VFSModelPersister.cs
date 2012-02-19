@@ -9,6 +9,11 @@ using System.IO.Compression;
 
 namespace Gianos.UniLib
 {
+    /// <summary>
+    /// VFS Model Persister. Implements methods for
+    /// reading and updating entity metadata coming
+    /// from the VFS table.
+    /// </summary>
     class VFSModelPersister : IModelPersister
     {
         private const string SelectEntityQueryText =
@@ -16,44 +21,38 @@ namespace Gianos.UniLib
 FROM VIRTUALFILESYSTEM
 WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
 
+        private const string SelectFileQueryText =
+@"SELECT ITEMDATA, ISCOMPRESSED
+FROM VIRTUALFILESYSTEM
+WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.{0}.entity.xml';";
+
+        private const string UpdateFileQueryText =
+@"UPDATE VIRTUALFILESYSTEM
+SET ITEMDATA = @dataPar,
+    ISCOMPRESSED = @isCompressedPar,
+    MODIFYUSER = 'ADMIN',
+    MODIFYDATE = GETDATE()
+WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.{0}.entity.xml';";
+
         /// <summary>
         /// Connection String property
         /// </summary>
-        public string dbConnectionString { get; set; }
+        private string dbConnectionString { get; set; }
         private System.Data.SqlClient.SqlConnection dbConnection;
-
-        private string _serverName;
-        private string _databaseName;
-        private Microsoft.SqlServer.Management.Common.ServerConnection _serverConnection;
 
         public VFSModelPersister(string serverName, string databaseName, string userName, string password)
         {
-            _serverName = serverName;
-            _databaseName = databaseName;
-            _serverConnection = new Microsoft.SqlServer.Management.Common.ServerConnection(
-                serverName,
-                userName,
-                password
-            );
+            var connStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder()
+                {
+                    DataSource = serverName,
+                    InitialCatalog = databaseName,
+                    UserID = userName,
+                    Password = password
+                };
 
-            var connStringBuilder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-            connStringBuilder.DataSource = serverName;
-            connStringBuilder.InitialCatalog = databaseName;
-            connStringBuilder.UserID = userName;
-            connStringBuilder.Password = password;
-
-            OpenDbConnection(connStringBuilder.ToString());
-        }
-
-        /// <summary>
-        /// Opens up the Connection to the database to access VFS
-        /// </summary>
-        /// <param name="_dbConnectionString">The Connection String</param>
-        private void OpenDbConnection(string _dbConnectionString)
-        {
-            dbConnectionString = _dbConnectionString;
-
+            dbConnectionString = connStringBuilder.ToString();
             OpenDbConnection();
+            CloseConnection();
         }
 
         /// <summary>
@@ -94,7 +93,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
         public IEnumerable<XPathDocument> GetEntityFiles()
         {
             OpenDbConnection();
-            var cmd = CreateSelectEntityFilesCommand();
+            var cmd = CreateSqlCommand(VFSModelPersister.SelectEntityQueryText);
 
             // read the field information from the db
             var recSet = cmd.ExecuteReader();
@@ -105,30 +104,20 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
             // read sql info for each field
             while (recSet.Read())
             {
-                yield return new XPathDocument(GetXmlStringFromFileDataReader(recSet));
+                var sr = GetStringReaderFromVFSRecordData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
+                yield return new XPathDocument(sr);
             }
 
             recSet.Close();
             CloseConnection();
 
-            //throw new Exception("Some error occurred retrieving field information from the db! Aborting.");
-
             yield break;
         }
 
-        private static System.IO.StringReader GetXmlStringFromFileDataReader(System.Data.SqlClient.SqlDataReader recSet)
-        {
-            var ms = UnpackItemData(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
-            string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
-            ms.Close();
-
-            return new System.IO.StringReader(xmlString);
-        }
-
-        private System.Data.SqlClient.SqlCommand CreateSelectEntityFilesCommand()
+        private System.Data.SqlClient.SqlCommand CreateSqlCommand(string cmdText)
         {
             var cmd = dbConnection.CreateCommand();
-            cmd.CommandText = VFSModelPersister.SelectEntityQueryText;
+            cmd.CommandText = cmdText;
             cmd.CommandType = System.Data.CommandType.Text;
             return cmd;
         }
@@ -136,13 +125,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%.entity.xml';";
         public XmlDocument OpenEntityFileForField(FieldInformation field)
         {
             OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"SELECT ITEMDATA, ISCOMPRESSED
-FROM VIRTUALFILESYSTEM
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.tableName + ".entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
+            var cmd = CreateSqlCommand(String.Format(SelectFileQueryText, field.tableName));
 
             // read the field information from the db
             var recSet = cmd.ExecuteReader();
@@ -152,10 +135,8 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
 
             // read sql info for each field
             if (!recSet.Read()) return null;
-
-            XmlDocument doc = BuildXmlDocumentFromRAWEntityFile(
-                recSet.GetValue(0) as byte[],
-                (recSet.GetValue(1) as string) == "T");
+            
+            XmlDocument doc = BuildXmlDocumentFromRAWEntityFile(recSet.GetValue(0) as byte[], (recSet.GetValue(1) as string) == "T");
 
             recSet.Close();
             CloseConnection();
@@ -165,13 +146,21 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
 
         private static XmlDocument BuildXmlDocumentFromRAWEntityFile(byte[] data, bool mustCompress)
         {
+            var sr = GetStringReaderFromVFSRecordData(data, mustCompress);
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(sr);
+            
+            return doc;
+        }
+
+        private static System.IO.StringReader GetStringReaderFromVFSRecordData(byte[] data, bool mustCompress)
+        {
             var ms = UnpackItemData(data, mustCompress);
             string xmlString = System.Text.UTF8Encoding.UTF8.GetString(ms.ToArray());
             ms.Close();
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(new System.IO.StringReader(xmlString));
-            return doc;
+            return new System.IO.StringReader(xmlString);
         }
 
         public void SaveEntityFileForField(FieldInformation field, XmlDocument doc)
@@ -181,16 +170,7 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
             byte[] binaryData = BuildEntityFileBinaryData(doc, ref isCompressed);
 
             OpenDbConnection();
-            var cmd = dbConnection.CreateCommand();
-            cmd.CommandText =
-@"UPDATE VIRTUALFILESYSTEM
-SET ITEMDATA = @dataPar,
-    ISCOMPRESSED = @isCompressedPar,
-    MODIFYUSER = 'ADMIN',
-    MODIFYDATE = GETDATE()
-WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.tableName + ".entity.xml';";
-
-            cmd.CommandType = System.Data.CommandType.Text;
+            var cmd = CreateSqlCommand(String.Format(UpdateFileQueryText, field.tableName));
 
             cmd.Parameters.Add("@dataPar", System.Data.SqlDbType.Image)
                 .Value = binaryData;
@@ -203,14 +183,20 @@ WHERE ITEMPATH LIKE '\Model\Entity Model\%' AND	ITEMNAME LIKE '%." + field.table
             CloseConnection();
         }
 
+        /// <summary>
+        /// Encodes and compresses a XML document into a byte[]
+        /// </summary>
+        /// <param name="doc">XML document to encode</param>
+        /// <param name="isCompressed">If true, the returned byte[] is deflate-compressed</param>
+        /// <returns>Byte[] ready for insert in VFS table</returns>
         private static byte[] BuildEntityFileBinaryData(XmlDocument doc, ref bool isCompressed)
         {
             MemoryStream ms = new MemoryStream();
             doc.Save(ms);
             ms.Flush();
             ms.Position = 0;
-            byte[] binaryData = PackItemData(ms, true, ref isCompressed);
-            return binaryData;
+
+            return PackItemData(ms, true, ref isCompressed);
         }
 
         /// <summary>
